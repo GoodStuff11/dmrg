@@ -1,0 +1,31 @@
+#Basis size#
+m: 1 # equals N for DVR
+
+#Number of sites#
+Nsites: 10
+Nbond: 50
+Nsweep: 100
+ecutoff: 1e-8
+SVD: 1e-8
+
+#Interaction strength#
+gstart: 0.0
+dg: 0.1
+Ng: 14
+mbond: 5
+
+#Interaction pairs#
+pairs: nearest #nearest,allpairs
+
+#Basis states#
+states: all #all,even,odd,dvr
+
+#External electric field#
+angle: 90.0 #in degrees
+strength: 0.0
+
+#Excited states#
+Nstates: 0
+
+#Output path
+outputpath: /home/jkambulo/projects/def-pnroy/jkambulo/rotors_project/output_data
