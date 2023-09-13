@@ -74,11 +74,11 @@ end
 #Determine number of interaction pairs per starting site#
 Nsecond = zeros(Int64,(Nsites-1))
 for i=1:Nsites-1
-        if pairs == "nearest"
-                Nsecond[i]=i+1
-        elseif pairs == "allpairs"
-                Nsecond[i]=Nsites
-        end
+	if pairs == "nearest"
+	    Nsecond[i]=i+1
+	elseif pairs == "allpairs"
+		Nsecond[i]=Nsites
+	end
 end
 
 println(f)
@@ -91,8 +91,8 @@ close(f)
 
 let
 
-	include("operators.jl")
-	include("observer.jl")
+	include("dmrg_tdvp/operators.jl")
+	include("dmrg_tdvp/observer.jl")
 
 	if evod == "dvr"
 		fac1 = 1.0

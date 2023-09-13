@@ -112,9 +112,9 @@ end
 
 for ig = 0:Ng-1
 let
-	include("operators.jl")
-	include("observer.jl")
-
+	include("dmrg_tdvp/operators.jl")
+	include("dmrg_tdvp/observer.jl")
+	
 	if evod == "dvr"
 		fac1 = 1.0
 		fac2 = 1.0
