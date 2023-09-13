@@ -31,4 +31,6 @@ where $\mathcal{H}^{\sigma_i\sigma_{i}}_{a_ia_{i+1}}$ is a $k\times k$ tensor (o
 ### DMRG
 
 1. Initialize matrices and parameters
-1. Run DMRG on non-interacting rots as initial guess. $\mathcal{H}=E\sum \cos(\theta) S^x_j+\sin(\theta) S^y_j $
+1. Run DMRG on non-interacting rots as initial guess. $\mathcal{H}=E\sum_j \cos(\theta) S^x_j+\sin(\theta) S^y_j $. Store as $|\psi_0\rangle$
+1. Perform DMRG a series of times
+    1. Iteration 1: Using $|\psi_0\rangle$ perform DMRG with the smallest interaction strength for a fully connected Hamiltonian. Then 
