@@ -4,12 +4,13 @@ using Observers
 using Printf
 using HDF5
 using StatsPlots
-push!(LOAD_PATH,pwd())
-using dmrg_tdvp.matrices
-using dmrg_tdvp.states
-using dmrg_tdvp.expectations
-using dmrg_tdvp.dvr
-using dmrg_tdvp.utility_funcs
+push!(LOAD_PATH,joinpath(pwd(),"dmrg_tdvp"))
+
+using matrices
+using states
+using expectations
+using dvr
+using utility_funcs
 
 import YAML
 
@@ -112,8 +113,8 @@ end
 
 for ig = 0:Ng-1
 let
-	include("dmrg_tdvp/operators.jl")
-	include("dmrg_tdvp/observer.jl")
+	include("./dmrg_tdvp/operators.jl")
+	include("./dmrg_tdvp/observer.jl")
 	
 	if evod == "dvr"
 		fac1 = 1.0
@@ -387,23 +388,23 @@ let
 		#Write entropy and Schmidt values to file#
 		SvN,Renyi,Svalues = vN_entropy(psi,mbond)
 	
-		write_output("entropy_vN.txt",g,SvN)
-		write_output("entropy_Renyi.txt",g,Renyi)
-		write_output("schmidt_values.txt",g,Svalues)
+		write_output(joinpath(output_path, "entropy_vN.txt"),g,SvN)
+		write_output(joinpath(output_path, "entropy_Renyi.txt"),g,Renyi)
+		write_output(joinpath(output_path, "schmidt_values.txt"),g,Svalues)
 		
 		#Write nearest-neighbour correlation to file#
 		xcorr,ycorr = correlation(psi,Nsites,Nspec,evod,X,Y)
 		
-		write_output("xcorr.txt",g,xcorr)
-		write_output("ycorr.txt",g,ycorr)
-		write_output("corr.txt",g,(xcorr+ycorr)/(Nsites-1))
+		write_output(joinpath(output_path, "xcorr.txt"),g,xcorr)
+		write_output(joinpath(output_path, "ycorr.txt"),g,ycorr)
+		write_output(joinpath(output_path, "corr.txt"),g,(xcorr+ycorr)/(Nsites-1))
 		
 		
 		#Write polarization to file#
 		MuX,MuY = polarization(psi,Nsites,Nspec,evod,X,Y)
 	
-		write_output("mux.txt",g,MuX)
-		write_output("muy.txt",g,MuY)
+		write_output(joinpath(output_path, "mux.txt"),g,MuX)
+		write_output(joinpath(output_path, "muy.txt"),g,MuY)
 	end
 
 end

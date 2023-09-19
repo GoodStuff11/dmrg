@@ -1,5 +1,6 @@
 module matrices
 
+using SparseArrays
 using LinearAlgebra
 
 export kinetic,Xoperator,Yoperator,Upoperator,Downoperator,PNoperator,m
@@ -40,8 +41,8 @@ Creates matrix of form
 00-10000
 0000000
 0000100
-0000040
-0000009
+0000020
+0000003
 """
 function m(mmax)
 	matrix = zeros((2*mmax+1),(2*mmax+1))

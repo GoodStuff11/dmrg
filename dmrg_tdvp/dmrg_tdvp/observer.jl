@@ -12,7 +12,7 @@ function ITensors.checkdone!(o::DemoObserver;kwargs...)
         maxbond=maxlinkdim(wf)
         en_error=abs(energy-o.last_energy)/abs(energy)
 
-        fle=open("log","a")
+        fle=open(joinpath(output_path, "log"),"a")
         @printf(fle,"Sweep %i E= %.10e error= %.10e MaxBondDim= %i \n",sw,energy,en_error,maxbond)
         if en_error < o.energy_tol
                 println(fle,"Convergence reached after sweep $sw")

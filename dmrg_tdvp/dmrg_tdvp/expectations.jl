@@ -35,7 +35,7 @@ function polarization(wf,Nsites,Nbasis,evod,Xmat,Ymat)
 	global Y = Ymat
 	global Nspec = Nbasis
 
-	include("operators.jl")
+	include("./dmrg_tdvp/operators.jl")
 
 	if evod == "dvr"
 		mux = expect(wf,"X")
@@ -73,7 +73,7 @@ function correlation(wf,Nsites,Nbasis,evod,Xmat,Ymat)
 	global Y = Ymat
 	global Nspec = Nbasis
 
-	include("operators.jl")
+	include("./dmrg_tdvp/operators.jl")
 
 	if evod == "dvr"
 		dumX = correlation_matrix(wf,"X","X")

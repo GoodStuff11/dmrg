@@ -11,7 +11,7 @@ SVD: 1e-8
 #Interaction strength#
 gstart: 0.0
 dg: 0.1
-Ng: 14
+Ng: 30
 mbond: 5
 
 #Interaction pairs#
@@ -28,4 +28,4 @@ strength: 0.0
 Nstates: 0
 
 #Output path
-outputpath: /home/jkambulo/projects/def-pnroy/jkambulo/rotors_project/output_data
+outputpath: C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437A\dmrg\output_data #/home/jkambulo/projects/def-pnroy/jkambulo/rotors_project/output_data
