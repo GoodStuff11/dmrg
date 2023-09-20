@@ -92,3 +92,10 @@ I figured out that I was noticing a difference between the dmrg and ED because w
 
 * ED: -0.05618757(7289309135) vs DMRG: -0.05618757(058327395)
 * ED: -5.044407(884621901) vs DMRG: -5.044407(649444798)
+
+
+![Alt text](image.png)
+
+![Alt text](image-1.png)
+
+It seems the total correlation $\sum_i\langle|\psi|e_i e_{i+1}|\psi\rangle$ converges to around 8.37 as $g\rightarrow \infty$ (using $g\sim 10^7$).

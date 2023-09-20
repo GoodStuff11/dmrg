@@ -1,5 +1,5 @@
 #Basis size#
-m: 1 # equals N for DVR
+m: 5 # equals N for DVR
 
 #Number of sites#
 Nsites: 10
@@ -9,9 +9,9 @@ ecutoff: 1e-8
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 0.0
+gstart: 0.1
 dg: 0.1
-Ng: 30
+Ng: 40
 mbond: 5
 
 #Interaction pairs#
@@ -25,7 +25,7 @@ angle: 90.0 #in degrees
 strength: 0.0
 
 #Excited states#
-Nstates: 0
+Nstates: 20
 
 #Output path
 outputpath: C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437A\dmrg\output_data #/home/jkambulo/projects/def-pnroy/jkambulo/rotors_project/output_data

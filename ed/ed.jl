@@ -65,7 +65,7 @@ function main()
         Nsites = 10
         mmax = 1
         initial_state = ones(ComplexF64, (2*mmax+1)^Nsites)
-        H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=0.1, angle=90, Estrength=0, pairs="nearest")
+        H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=10, angle=90, Estrength=0, pairs="nearest")
         vals, vecs, info = KrylovKit.eigsolve(H, initial_state, 30, :SR; krylovdim = 30)
         print(vals)
         print(info)
