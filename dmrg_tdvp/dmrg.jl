@@ -343,12 +343,12 @@ let
             sum1x+=spectrum1x[i]^2
             sum2x+=spectrum2x[i]^2
         end
-        println(sum1x,' ',sum2x)
+        logger < (sum1x,' ',sum2x)
 
 
         for istates=1:Nstates+1
             #FS.values[istates]=1.0/FS.values[istates]
-            println(Fp.values[istates],' ',spectrum1x[istates]^2,' ',energies[istates],' ',spectrum2x[istates]^2,' ',Hmatrix[istates,istates],' ',Smatrix[1,istates])
+            logger < (Fp.values[istates],' ',spectrum1x[istates]^2,' ',energies[istates],' ',spectrum2x[istates]^2,' ',Hmatrix[istates,istates],' ',Smatrix[1,istates])
 
             #Calculate von-Neumann entropy and Schmidt coefficients#
             SvN,Renyi,Svalues = vN_entropy(wavefunction[istates],mbond)
