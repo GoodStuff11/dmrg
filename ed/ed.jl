@@ -68,41 +68,48 @@ end
 
 
 function main()
-    g = 30
+    g = 2
     Nsites = 6
+    pairs = "nearest"
     for g in 0.1:0.1:30
-        for mmax in 1:5
+        for mmax in 2:5
             energies = 20
             Estrength = 0
             angle = 90
             outputpath = "C:\\Users\\jonat\\OneDrive\\Documents\\programming\\AnacondaProjects\\PHYS437A\\dmrg\\output_data"
-            filename = joinpath(outputpath, "ED_benchmark.csv")
+            filename = joinpath(outputpath, "ED_benchmark_v3.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
             else
-                columns = Dict("t"=>Float64[], "memory"=>Int[], "mmax"=>Int[], 
+                columns = Dict("t_diagonalization"=>Float64[],"t_metrics"=>Float64[],"pairs"=>String[], "memory"=>Int[], "mmax"=>Int[], 
                                 "Nsites"=>Int[], "g"=>Float64[],"Estrength"=>Float64[], 
-                                "angle"=>Float64[], "correlation"=>Float64[])
+                                "angle"=>Float64[])
                 for i in 1:energies
                     columns["E$i"] = Float64[]
+                    columns["correlation$i"] = Float64[]
+                    columns["SvN$i"] = Float64[]
                 end
                 df = DataFrame(columns)
             end
-            @elapsed begin
-            end
-            t = @elapsed begin
+            @elapsed begin end
+            t1 = @elapsed begin
                 initial_state = ones(ComplexF64, (2*mmax+1)^Nsites)
-                H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=g, angle=angle, Estrength=Estrength, pairs="nearest")
-                memory = @allocated(tmp = KrylovKit.eigsolve(H, initial_state, energies, :SR; krylovdim = 30))
+                H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=g, angle=angle, Estrength=Estrength, pairs=pairs)
+                memory = @allocated(tmp = KrylovKit.eigsolve(H, initial_state, energies, :SR))
                 vals, vecs, info = tmp
-
-                ground_corr = correlation(vecs[1]; Nsites=Nsites, mmax=mmax)
             end
-            data = Dict("t"=>t, "memory"=>memory, "mmax"=>mmax, "Nsites"=>Nsites,
-                        "g"=>g,"Estrength"=>Estrength, "angle"=>angle, "correlation"=>ground_corr)
-            for i in 1:energies
-                data["E$i"] = real(vals[i])
+            data = Dict("memory"=>memory, "mmax"=>mmax, "Nsites"=>Nsites,
+                "g"=>g,"Estrength"=>Estrength, "angle"=>angle, "pairs"=>pairs)
+            t2 = @elapsed begin
+                for i in 1:energies
+                    data["E$i"] = real(vals[i])
+                    data["correlation$i"] = correlation(vecs[i]; Nsites=Nsites, mmax=mmax)
+                    SvN, _ = vN_entropy(vecs[i]; Nsites=Nsites, mmax=mmax, split=Nsites ÷ 2)
+                    data["SvN$i"] = SvN
+                end
             end
+            data["t_diagonalization"] = t1
+            data["t_metrics"] = t2
             push!(df, data)
             CSV.write(filename, df)
 

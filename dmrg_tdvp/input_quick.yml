@@ -1,31 +1,30 @@
-#Basis size#
-m: 5 # equals N for DVR
-
-#Number of sites#
-Nsites: 10
-Nbond: 50
-Nsweep: 100
-ecutoff: 1e-8
-SVD: 1e-8
-
-#Interaction strength#
-gstart: 0.1
-dg: 0.2
-Ng: 20
-mbond: 5
-
-#Interaction pairs#
-pairs: nearest #nearest,allpairs
-
-#Basis states#
-states: all #all,even,odd,dvr
-
+# Hamiltonian
+Nsites: 6 
+m: 4 # equals N for DVR
+pairs: nearest #interaction pairs #nearest,allpairs
 #External electric field#
 angle: 90.0 #in degrees
 strength: 0.0
 
-#Excited states#
-Nstates: 20
+#dmrg
+Nbond: 50
+Nsweep: 200 # number of dmrg sweeps
+maxdim: 20 # dmrg bond dimension
+ecutoff: 1e-8
+SVD: 1e-8
+
+#Interaction strength g#
+gstart: 0.1
+dg: 0.2 # difference between g values
+Ng: 1 # number of g values to try
+
+mbond: 3 # entropy split
+
+#Basis states#
+states: all #all,even,odd,dvr
+
+#Excited states to log (0 means only ground state)#
+Nstates: 5
 
 #Output path
 outputpath: C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437A\dmrg\output_data #/home/jkambulo/projects/def-pnroy/jkambulo/rotors_project/output_data
