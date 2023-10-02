@@ -1,5 +1,6 @@
 using ITensors
 #using ITensorTDVP
+using Printf
 using Observers
 using Printf
 using HDF5
@@ -8,11 +9,10 @@ using CSV
 using DataFrames
 push!(LOAD_PATH,joinpath(pwd(),"dmrg_tdvp"))
 
-using matrices
-using states
-using expectations
-using dvr
 using utility_funcs
+using operators
+using states
+using dvr
 
 import YAML
 
@@ -33,19 +33,17 @@ function main(data::Dict{Any, Any})
     angle = data["angle"]*pi/180.0
     Estrength = data["strength"]
     Nstates = data["Nstates"]
+    maxdim = data["maxdim"]
     output_path = data["outputpath"]
 
-    logger = Logger(output_path, "log")
-    logger_int = Logger(output_path, "int.txt")
-    logger < [
-        """
-        #######################################
-        ###########Basis information###########
-        #######################################""",
-        ("mmax= ",mmax),
-        ("Number of sites: ",Nsites),
-        ("Dimension of local Hilbert space: ",2*mmax+1)
-    ]
+    set_logger(output_path)
+    @info @sprintf """\n#######################################
+    ###########Basis information###########
+    #######################################
+    mmax = %i
+    Number of sites: %i
+    Dimension of local Hilbert space:: %i
+    """ mmax Nsites 2*mmax+1
 
     if evod == "dvr"
         fac1 = 1.0
@@ -55,42 +53,20 @@ function main(data::Dict{Any, Any})
         fac2 = 1.0im
     end
 
-    #Calculate kinetic matrix and x operator#
-    Ttmp = kinetic(mmax)
-    Xtmp = Xoperator(mmax)
-    Ytmp = Yoperator(mmax)
-    Uptmp = Upoperator(mmax)
-    Downtmp = Downoperator(mmax)
     #Define basis#
     if evod == "all"
-        global T = Ttmp
-        global X = Xtmp
-        global Y = Ytmp
-        global Up = Uptmp
-        global Down = Downtmp
-
-        #hilbert space size
-        Nspec=size(T,1)
-        logger < "all m-states are considered"
+        @info "all m-states are considered"
     elseif evod == "dvr"
-        tmp1,tmp2,tmp3 = exp_dvr(mmax)
-        global T = tmp1
-        global X = tmp2
-        global Y = tmp3
-        Nspec=size(T,1)
-        logger < "DVR-basis is used"
+        @info  "DVR-basis is used"
     else
-        global T = symmetry(Ttmp,evod,mmax)
-        global X = symmetry(Xtmp,evod,mmax)
-        global Y = symmetry(Ytmp,evod,mmax)
-        logger < ("only "+evod+" m-states are considered")
-        Nspec=size(T,1)
+        @info ("only "+evod+" m-states are considered")
     end
-    logger < ("Dimension of local Hilbert space for chosen m-states: ",Nspec)
+
+    @info @sprintf "Dimension of local Hilbert space for chosen m-states: %i" 2*mmax+1
     if pairs == "nearest"
-        logger < "only nearest-neighbour interactions"
+        @info "only nearest-neighbour interactions"
     elseif pairs == "allpairs"
-        logger < "all interactions"
+        @info "all interactions"
     end
     #Determine number of interaction pairs per starting site#
     Nsecond = zeros(Int64,(Nsites-1))
@@ -102,9 +78,7 @@ function main(data::Dict{Any, Any})
         end
     end
 
-    logger <
-        """\n
-        #################################################################################
+    @info """\n#################################################################################
         ##################################
         ####Calculate free rotor chain####
         ##################################
@@ -113,27 +87,25 @@ function main(data::Dict{Any, Any})
 
     #Define output files#
     if Nstates == 0
-        df = DataFrame(mmax=Int[],Nsites=Int[],interaction=String[],basis=String[],
+        df = DataFrame(dmrg_duration=Float64[], mmax=Int[],Nsites=Int[],interaction=String[],basis=String[],
                 E_angle=[], E_strength=[],
-                g=[],energy=[], vN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
+                g=[],energy=[], SvN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
     else
-        df = DataFrame(mmax=Int[],Nsites=Int[],interaction=String[], basis=String[],
+        df = DataFrame(dmrg_duration=Float64[], mmax=Int[],Nsites=Int[],interaction=String[], basis=String[],
                 E_angle=[], E_strength=[],
-                g=[],istate=Int[],energy=[], vN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
+                g=[],istate=Int[],energy=[], SvN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
     end
 
 
     for i=1:Nstates+1
         create_file(joinpath(output_path,"schmidt_values_"*string(i)*".txt"),evod,mmax,Nsites)
     end
-
-    let
-    include("./dmrg_tdvp/operators.jl")
-    include("./dmrg_tdvp/observer.jl")
+    
     for ig = 0:Ng-1
+        duration_log = Vector{Float64}()
         #Non-interacting rotors as initial guess#
         if ig == 0
-            sites=siteinds("PlaRotor",Nsites; conserve_qns=false)
+            sites=siteinds("PlaRotor",Nsites; conserve_qns=false, dim=mmax)
             ampo0 = AutoMPO()
             #Define Hamiltonian as MPO#
             for j=1:Nsites
@@ -146,7 +118,7 @@ function main(data::Dict{Any, Any})
             #Define accuracy parameters#
             sweeps = Sweeps(Nsweep)
             #Set up initial state#
-            global psi0 = randomMPS(sites,10)
+            psi0 = randomMPS(sites,10) # global
             
             maxdim!(sweeps,10) # gradually increase states kept
             cutoff!(sweeps,SVD_error) # desired truncation error
@@ -156,25 +128,26 @@ function main(data::Dict{Any, Any})
             duration = @elapsed begin
                 energy,psi = dmrg(H0,psi0,sweeps,observer=obs, outputlevel=0)
             end
-            global psi0 = psi
+            psi0 = psi #global
 
             maxbond=maxlinkdim(psi)
-            logger < [("Max. bond dimension: ",maxbond),
-                    ("DMRG Duration: ",duration),
-                    @sprintf("Final energy = %.8f \n\n",energy),
-                    "Initial state calculated",
-                    "###############################################################################"]
+            @info @sprintf """\nMax. bond dimension: %i
+            DMRG Duration: %f
+            Final energy = %.8f \n
+            Initial state calculated
+            ###############################################################################
+            """ maxbond duration energy
+
         end    
         g = gstart + ig*delta_g
         
-        logger < [
-            "##################################",
-            ("########g= ",g," ########"),
-            """##################################
+        @info @sprintf("""\n##################################
+            ########g= %.3f ########
+            ##################################
 
             ####DMRG calculation####
-            Construct MPO"""
-        ]
+            Construct MPO""", g
+        )
         
 
         # setup MPO for the correct Hamiltonian
@@ -227,12 +200,13 @@ function main(data::Dict{Any, Any})
         end
 
         #Perform DMRG runs#
-        logger < "Start DMRG run"
+        @info "Start DMRG run"
 
         obs = DemoObserver(e_cutoff)
         duration = @elapsed begin
             energy,psi = dmrg(H,psi0,sweeps,observer=obs, outputlevel=0)
         end
+        push!(duration_log, duration)
         mps_out=h5open(joinpath(output_path,"psi0_g"*string(round(g,digits=3))),"w")
         write(mps_out,"MPS",psi)
         close(mps_out)
@@ -240,12 +214,11 @@ function main(data::Dict{Any, Any})
         psi0 = copy(psi)
 
         maxbond=maxlinkdim(psi)
-        logger < ["",
-            ("Max. bond dimension: ",maxbond),
-            ("DMRG Duration: ",duration),
-            @sprintf("Final energy = %.8f \n", energy),
-            ""
-            ]
+        @info @sprintf """\nMax. bond dimension: %i
+        DMRG Duration: %f
+        Final energy = %.8f \n
+        """ maxbond duration energy
+        
         
         if Nstates > 0 #&& (g==1.1 || g==0)
         #if Nstates != 0 
@@ -254,41 +227,44 @@ function main(data::Dict{Any, Any})
             append!(energies,energy)
             wavefunction = [psi for ii=1:Nstates+1]
             if ig == 0
-                global initial_states = [psi0 for ii=1:Nstates]
+                initial_states = [psi0 for ii=1:Nstates] #global
             end
 
             for istates=1:Nstates
                 if ig == 0
-                    global initial_states[istates] = randomMPS(sites,Nbonds)
+                    initial_states[istates] = randomMPS(sites,Nbonds) #global
                 else
                     maxdim!(sweeps,maxlinkdim(initial_states[istates]),Nbonds) # gradually increase states kept
                 end
                 cutoff!(sweeps,SVD_error) # desired truncation error
 
-                nsweeps = 200
-                maxdim = [200]
                 cutoff = [1E-10]
                 #noise = [1E-6]
                 weight=30.
 
                 psi_init = randomMPS(sites,Nbonds)
                 #energy ,psi = dmrg(H,wavefunction[1:istates],initial_states[istates] ,sweeps, observer=obs, outputlevel=0)
-                energy ,psi = dmrg(H,wavefunction[1:istates],psi_init ; nsweeps, maxdim, cutoff,weight)
-                global initial_states[istates] = psi
+                println(Nsweep)
+                println(maxdim)
+                obs = DemoObserver(e_cutoff)
+                duration = @elapsed begin
+                    energy ,psi = dmrg(H,wavefunction[1:istates],psi_init; nsweeps=Nsweep, maxdim=maxdim, cutoff=cutoff,weight=weight)
+                end
+                push!(duration_log, duration)
+                initial_states[istates] = psi # global
 
                 maxbond=maxlinkdim(psi)
-                logger < [
-                    ("Max. bond dimension: ",maxbond),"",
-                    "Final energy "*string(istates)*". excited state= "*string(round(energy,digits=12))*"\n",
-                    ""
-                    ]
+                @info @sprintf("""\nMax. bond dimension: %i
+                    Final energy %i - excited state=%.12f\n
+                    """, maxbond, istates, round(energy,digits=12))
+                
                 wavefunction[istates+1]=psi
                 append!(energies,energy)
                 #Calculate ground state spectrum
                 norm_mu=sqrt(inner(psi0, psi0)*inner(wavefunction[istates+1],wavefunction[istates+1]))
                 intX=inner(wavefunction[istates+1],  Apply(muX, psi0))/norm_mu
                 intY=inner(wavefunction[istates+1],  Apply(muY, psi0))/norm_mu
-                logger_int < (g," ",energy," ",intX," ",intY,"\n")
+                @info @sprintf("g=%f energy=%f intX=%f intY=%f", g,energy,intX,intY)
             end
             Hmatrix=zeros(Float64,(Nstates+1, Nstates+1))
             Smatrix=zeros(Float64,(Nstates+1, Nstates+1))
@@ -342,12 +318,12 @@ function main(data::Dict{Any, Any})
                 sum1x+=spectrum1x[i]^2
                 sum2x+=spectrum2x[i]^2
             end
-            logger < (sum1x,' ',sum2x)
+            @info @sprintf("%f %f", sum1x, sum2x)
 
 
             for istates=1:Nstates+1
                 #FS.values[istates]=1.0/FS.values[istates]
-                logger < (Fp.values[istates],' ',spectrum1x[istates]^2,' ',energies[istates],' ',spectrum2x[istates]^2,' ',Hmatrix[istates,istates],' ',Smatrix[1,istates])
+                @info @sprintf("%f %f %f %f %f %f", Fp.values[istates],spectrum1x[istates]^2,energies[istates],spectrum2x[istates]^2,Hmatrix[istates,istates],Smatrix[1,istates])
 
                 #Calculate von-Neumann entropy and Schmidt coefficients#
                 SvN,Renyi,Svalues = vN_entropy(wavefunction[istates],mbond)
@@ -355,11 +331,11 @@ function main(data::Dict{Any, Any})
                 write_output("schmidt_values_"*string(istates)*".txt",g,Svalues)
                 
                 #Calculate dipole correlations#
-                xcorr,ycorr = correlation(wavefunction[istates],Nsites,Nspec,evod,X,Y)
+                xcorr,ycorr = correlation(wavefunction[istates],Nsites,evod)
                 
                 #Calculate summed dipole moment and fluctuation#
-                MuX,MuY = polarization(wavefunction[istates],Nsites,Nspec,evod,X,Y)   
-                push!(df, [
+                MuX,MuY = polarization(wavefunction[istates],Nsites,evod)   
+                push!(df, [duration_log[istates],
                     mmax, Nsites, pairs, evod, 
                     angle, Estrength,
                     g, istates, energies[istates], SvN, Renyi, MuX, MuY, xcorr, ycorr, (xcorr+ycorr)/(Nsites-1)])
@@ -370,9 +346,9 @@ function main(data::Dict{Any, Any})
             #Write entropy and Schmidt values to file#
             SvN,Renyi,Svalues = vN_entropy(psi,mbond)
             #Write nearest-neighbour correlation to file#
-            xcorr,ycorr = correlation(psi,Nsites,Nspec,evod,X,Y)
+            xcorr,ycorr = correlation(psi,Nsites,2*mmax+1,evod,X,Y)
             #Write polarization to file#
-            MuX,MuY = polarization(psi,Nsites,Nspec,evod,X,Y)
+            MuX,MuY = polarization(psi,Nsites,2*mmax+1,evod,X,Y)
 
             write_output(joinpath(output_path, "schmidt_values.txt"),g,Svalues)
             
@@ -384,10 +360,8 @@ function main(data::Dict{Any, Any})
 
     end
 
-    end
-
     CSV.write(joinpath(output_path, "data.csv"), df)
-    logger < "Calculation finished."
+    @info "Calculation finished."
 end
 
 data = YAML.load_file("input_quick.yml")

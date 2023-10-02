@@ -99,3 +99,16 @@ I figured out that I was noticing a difference between the dmrg and ED because w
 ![Alt text](image-1.png)
 
 It seems the total correlation $\sum_i\langle|\psi|e_i e_{i+1}|\psi\rangle$ converges to around 8.37 as $g\rightarrow \infty$ (using $g\sim 10^7$).
+
+## Benchmarking SVD
+
+| Nsites | mmax | time | allocations | memory |Method |
+|--------|------|------|-------------|--------|-------|
+|6       | 1    |0.000056s | 55       |71.016 KiB| Krylov |
+|6       | 1    |0.000077s| 8       |38.734 KiB| LinAlg |
+|6       | 2    |0.000997s | 91    |1.006 MiB| Krylov |
+|6       | 2    |0.002080s |  11   |739.812 KiB| LinAlg |
+|6       | 3    |0.004435s | 400    |2.370 MiB| Krylov |
+|6       | 3    |0.015207s |  12   |5.549 MiB| LinAlg |
+|6       | 4    |0.010361s | 440    |7.872 MiB| Krylov |
+|6       | 4    |0.069506s |  12   |24.716 MiB| LinAlg |

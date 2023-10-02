@@ -1,7 +1,10 @@
 module utility_funcs
 
 using Printf
-export create_file, write_output, write_text, Logger
+using Logging, LoggingExtras, Dates
+
+include("logger.jl")
+export create_file, write_output, write_text, set_logger
 
 function create_file(path,evod,mmax,Nsites)
     f=open(path,"w")
@@ -18,7 +21,7 @@ end
 
 function write_output(path,g,observable)
     text=' '
-    for b=1:length(observable)
+    for b in eachindex(observable)
         text*=string(observable[b],' ')
     end
     f=open(path,"a")
@@ -30,40 +33,6 @@ function write_text(path,g,txt)
     f=open(path,"a")
     println(f,round(g,digits=4)," ",txt)
     close(f)
-end
-
-mutable struct Logger
-    path::String
-    filename::String
-
-    function Logger(path::String)
-        new(path, "log")
-    end
-    function Logger(path::String, filename::String)
-        new(path, filename)
-    end
-end
-
-function Base.:<(log::Logger, strings::Vector{Any})
-    file = open(joinpath(log.path, log.filename),"a")
-    for s in strings
-        if s isa Tuple
-            println(file, s...)
-        else
-            println(file,s)
-        end
-    end
-    close(file)
-end
-
-function Base.:<(log::Logger, string::Union{Any, Tuple{Any}})
-    file = open(joinpath(log.path, log.filename),"a")
-    if string isa Tuple
-        println(file,string...)
-    else
-        println(file,string)
-    end
-    close(file)
 end
 
 

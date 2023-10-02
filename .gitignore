@@ -1,3 +1,4 @@
 /env
 /output_data
 slurm-*
+/output_data/mmax*

@@ -1,13 +1,4 @@
-module expectations
-  
-using ITensors
-using LinearAlgebra
-
-
-export vN_entropy,polarization,correlation
-################################################################################
 function vN_entropy(wf,mbond)
-
 	if length(wf) == 2
 		orthogonalize!(wf, 2)
 		U,S,V = svd(wf[2], (siteind(wf,2)))
@@ -19,9 +10,9 @@ function vN_entropy(wf,mbond)
 	renyi = 0.0
 	schmidtvalues=zeros(dim(S, 1))
 	for n=1:dim(S, 1)
-			p = S[n,n]^2
-			schmidtvalues[n]=p
-			SvN -= p * log(p)
+		p = S[n,n]^2
+		schmidtvalues[n]=p
+		SvN -= p * log(p)
 		renyi += p^2
 	end
 	renyi=-0.5*log(renyi)
@@ -29,14 +20,7 @@ function vN_entropy(wf,mbond)
 	return SvN,renyi,schmidtvalues
 end
 ################################################################################
-function polarization(wf,Nsites,Nbasis,evod,Xmat,Ymat)
-
-	global X = Xmat
-	global Y = Ymat
-	global Nspec = Nbasis
-
-	include("./dmrg_tdvp/operators.jl")
-
+function polarization(wf,Nsites,evod)
 	if evod == "dvr"
 		mux = expect(wf,"X")
 		muy = expect(wf,"Y")
@@ -67,14 +51,7 @@ function polarization(wf,Nsites,Nbasis,evod,Xmat,Ymat)
 	return real(sum(mux)),real(sum(muy))
 end
 ################################################################################
-function correlation(wf,Nsites,Nbasis,evod,Xmat,Ymat)
-
-	global X = Xmat
-	global Y = Ymat
-	global Nspec = Nbasis
-
-	include("./dmrg_tdvp/operators.jl")
-
+function correlation(wf,Nsites,evod)
 	if evod == "dvr"
 		dumX = correlation_matrix(wf,"X","X")
 		dumY = correlation_matrix(wf,"Y","Y")
@@ -100,4 +77,3 @@ function correlation(wf,Nsites,Nbasis,evod,Xmat,Ymat)
 	return real(Xcorr),real(Ycorr)
 end
 ################################################################################
-end

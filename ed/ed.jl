@@ -1,5 +1,10 @@
 import KrylovKit
-using ITensors
+using CSV
+using DataFrames
+using LinearAlgebra
+
+push!(LOAD_PATH,joinpath(pwd(),"ed"))
+using observables
 
 function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     dim = 2*mmax + 1
@@ -60,15 +65,55 @@ function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     end
     return final_state
 end
+
+
 function main()
-    @time begin
-        Nsites = 10
-        mmax = 1
-        initial_state = ones(ComplexF64, (2*mmax+1)^Nsites)
-        H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=10, angle=90, Estrength=0, pairs="nearest")
-        vals, vecs, info = KrylovKit.eigsolve(H, initial_state, 30, :SR; krylovdim = 30)
-        print(vals)
-        print(info)
+    g = 2
+    Nsites = 6
+    pairs = "nearest"
+    for g in 0.1:0.1:30
+        for mmax in 2:5
+            energies = 20
+            Estrength = 0
+            angle = 90
+            outputpath = "C:\\Users\\jonat\\OneDrive\\Documents\\programming\\AnacondaProjects\\PHYS437A\\dmrg\\output_data"
+            filename = joinpath(outputpath, "ED_benchmark_v3.csv")
+            if isfile(filename)
+                df = DataFrame(CSV.File(filename))
+            else
+                columns = Dict("t_diagonalization"=>Float64[],"t_metrics"=>Float64[],"pairs"=>String[], "memory"=>Int[], "mmax"=>Int[], 
+                                "Nsites"=>Int[], "g"=>Float64[],"Estrength"=>Float64[], 
+                                "angle"=>Float64[])
+                for i in 1:energies
+                    columns["E$i"] = Float64[]
+                    columns["correlation$i"] = Float64[]
+                    columns["SvN$i"] = Float64[]
+                end
+                df = DataFrame(columns)
+            end
+            @elapsed begin end
+            t1 = @elapsed begin
+                initial_state = ones(ComplexF64, (2*mmax+1)^Nsites)
+                H(x) = Hamiltonian(x; Nsites=Nsites, mmax=mmax, g=g, angle=angle, Estrength=Estrength, pairs=pairs)
+                memory = @allocated(tmp = KrylovKit.eigsolve(H, initial_state, energies, :SR))
+                vals, vecs, info = tmp
+            end
+            data = Dict("memory"=>memory, "mmax"=>mmax, "Nsites"=>Nsites,
+                "g"=>g,"Estrength"=>Estrength, "angle"=>angle, "pairs"=>pairs)
+            t2 = @elapsed begin
+                for i in 1:energies
+                    data["E$i"] = real(vals[i])
+                    data["correlation$i"] = correlation(vecs[i]; Nsites=Nsites, mmax=mmax)
+                    SvN, _ = vN_entropy(vecs[i]; Nsites=Nsites, mmax=mmax, split=Nsites ÷ 2)
+                    data["SvN$i"] = SvN
+                end
+            end
+            data["t_diagonalization"] = t1
+            data["t_metrics"] = t2
+            push!(df, data)
+            CSV.write(filename, df)
+
+        end
     end
 end
 
