@@ -1,0 +1,716 @@
+Time: 2023-10-02 16:37:10 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 4
+Number of sites: 6
+Dimension of local Hilbert space:: 9
+
+Time: 2023-10-02 16:37:10 | Info: all m-states are considered
+Time: 2023-10-02 16:37:10 | Info: Dimension of local Hilbert space for chosen m-states: 9
+Time: 2023-10-02 16:37:10 | Info: only nearest-neighbour interactions
+Time: 2023-10-02 16:37:10 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-02 16:38:11 | Info: Sweep 1 E=1.9690589922e+00 error=5.0685680061e+02 MaxBondDim=10
+Time: 2023-10-02 16:38:12 | Info: Sweep 2 E=6.6561470327e-01 error=1.9582564546e+00 MaxBondDim=10
+Time: 2023-10-02 16:38:12 | Info: Sweep 3 E=1.2893183918e-01 error=4.1625316719e+00 MaxBondDim=10
+Time: 2023-10-02 16:38:12 | Info: Sweep 4 E=1.9150238033e-02 error=5.7326494299e+00 MaxBondDim=10
+Time: 2023-10-02 16:38:12 | Info: Sweep 5 E=4.1488521393e-03 error=3.6157918843e+00 MaxBondDim=9
+Time: 2023-10-02 16:38:12 | Info: Sweep 6 E=1.2502057650e-03 error=2.3185354408e+00 MaxBondDim=8
+Time: 2023-10-02 16:38:12 | Info: Sweep 7 E=3.9226733263e-04 error=2.1871268927e+00 MaxBondDim=5
+Time: 2023-10-02 16:38:12 | Info: Sweep 8 E=5.7666497717e-05 error=5.8023436165e+00 MaxBondDim=3
+Time: 2023-10-02 16:38:12 | Info: Sweep 9 E=4.1749497941e-10 error=1.3812400883e+05 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 10 E=5.5013729668e-12 error=7.4889233820e+01 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 11 E=7.4651144939e-13 error=6.3694421850e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 12 E=1.1665841487e-13 error=5.3991221739e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 13 E=1.8385310393e-14 error=5.3451969197e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 14 E=2.9065326952e-15 error=5.3255130154e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 15 E=4.6028992381e-16 error=5.3145694590e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 16 E=7.2964510018e-17 error=5.3084083439e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 17 E=1.1572591828e-17 error=5.3049411143e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 18 E=1.8360475051e-18 error=5.3029915057e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 19 E=2.9134844761e-19 error=5.3018956171e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 20 E=4.6236391997e-20 error=5.3012799016e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 21 E=7.3380143861e-21 error=5.3009404948e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 22 E=1.1646264368e-21 error=5.3007451609e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 23 E=1.8484311129e-22 error=5.3006212606e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 24 E=2.9337629464e-23 error=5.3005469311e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 25 E=4.6563664979e-24 error=5.3005413078e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 26 E=7.3905639698e-25 error=5.3004210733e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 27 E=1.1731145157e-25 error=5.2999510030e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 28 E=1.8623485389e-26 error=5.2991136793e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 29 E=2.9624710587e-27 error=5.2864699839e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 30 E=4.7740917182e-28 error=5.2053082211e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 31 E=8.3130589467e-29 error=4.7428820713e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 32 E=2.0669782704e-29 error=3.0218414803e+00 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 33 E=2.0535694532e-29 error=6.5295172283e-03 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 34 E=2.0091960273e-29 error=2.2085165069e-02 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Sweep 35 E=2.0091960273e-29 error=1.3948847651e-16 MaxBondDim=1
+Time: 2023-10-02 16:38:12 | Info: Convergence reached after sweep 35
+Time: 2023-10-02 16:38:12 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 46.846442
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-02 16:38:12 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-02 16:38:13 | Info: Start DMRG run
+Time: 2023-10-02 16:38:13 | Info: Sweep 1 E=-3.1302400129e-02 error=3.1947432091e+04 MaxBondDim=5
+Time: 2023-10-02 16:38:13 | Info: Sweep 2 E=-3.1302873216e-02 error=1.5113210661e-05 MaxBondDim=6
+Time: 2023-10-02 16:38:13 | Info: Sweep 3 E=-3.1302880608e-02 error=2.3614190125e-07 MaxBondDim=6
+Time: 2023-10-02 16:38:13 | Info: Sweep 4 E=-3.1302880604e-02 error=1.1338128941e-10 MaxBondDim=6
+Time: 2023-10-02 16:38:13 | Info: Convergence reached after sweep 4
+Time: 2023-10-02 16:38:14 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.149326
+Final energy = -0.03130288 
+
+
+Time: 2023-10-02 16:38:30 | Info: 
+Max. bond dimension: 12
+Final energy 1 - excited state=0.790798289771
+
+
+Time: 2023-10-02 16:38:31 | Info: g=0.100000 energy=0.790798 intX=1.830681 intY=-0.000000
+Time: 2023-10-02 16:38:47 | Info: 
+Max. bond dimension: 12
+Final energy 2 - excited state=0.852943317484
+
+
+Time: 2023-10-02 16:38:47 | Info: g=0.100000 energy=0.852943 intX=-0.000000 intY=0.000000
+Time: 2023-10-02 16:39:06 | Info: 
+Max. bond dimension: 12
+Final energy 3 - excited state=0.886064084634
+
+
+Time: 2023-10-02 16:39:06 | Info: g=0.100000 energy=0.886064 intX=-0.000001 intY=-0.000000
+Time: 2023-10-02 16:39:26 | Info: 
+Max. bond dimension: 13
+Final energy 4 - excited state=0.914365421214
+
+
+Time: 2023-10-02 16:39:26 | Info: g=0.100000 energy=0.914365 intX=0.001117 intY=-0.215442
+Time: 2023-10-02 16:39:47 | Info: 
+Max. bond dimension: 14
+Final energy 5 - excited state=0.937692293868
+
+
+Time: 2023-10-02 16:39:47 | Info: g=0.100000 energy=0.937692 intX=0.453477 intY=0.000525
+Time: 2023-10-02 16:40:01 | Info: 3.557033 3.557035
+Time: 2023-10-02 16:40:01 | Info: -0.031303 0.000000 -0.031303 0.000000 -0.031303 1.000000
+Time: 2023-10-02 16:40:07 | Info: 0.790798 3.351392 0.790798 3.351392 0.790798 -0.000000
+Time: 2023-10-02 16:40:07 | Info: 0.852943 0.000000 0.852943 0.000000 0.852943 -0.000000
+Time: 2023-10-02 16:40:07 | Info: 0.886064 0.000000 0.886064 0.000000 0.886064 0.000000
+Time: 2023-10-02 16:40:07 | Info: 0.914365 0.000000 0.914365 0.000001 0.914365 -0.000000
+Time: 2023-10-02 16:40:07 | Info: 0.937692 0.205641 0.937692 0.205641 0.937692 0.000000
+Time: 2023-10-02 16:40:08 | Info: Calculation finished.
+Time: 2023-10-02 16:48:27 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 5
+Number of sites: 12
+Dimension of local Hilbert space:: 11
+
+Time: 2023-10-02 16:48:27 | Info: all m-states are considered
+Time: 2023-10-02 16:48:27 | Info: Dimension of local Hilbert space for chosen m-states: 11
+Time: 2023-10-02 16:48:27 | Info: only nearest-neighbour interactions
+Time: 2023-10-02 16:48:27 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-02 16:49:06 | Info: Sweep 1 E=3.5557928608e+00 error=2.8023123004e+02 MaxBondDim=10
+Time: 2023-10-02 16:49:06 | Info: Sweep 2 E=1.4789882812e+00 error=1.4042062441e+00 MaxBondDim=10
+Time: 2023-10-02 16:49:06 | Info: Sweep 3 E=7.2231245115e-01 error=1.0475741196e+00 MaxBondDim=10
+Time: 2023-10-02 16:49:06 | Info: Sweep 4 E=2.8910593450e-01 error=1.4984352272e+00 MaxBondDim=10
+Time: 2023-10-02 16:49:07 | Info: Sweep 5 E=1.1064763636e-01 error=1.6128523304e+00 MaxBondDim=10
+Time: 2023-10-02 16:49:07 | Info: Sweep 6 E=4.2781525072e-02 error=1.5863415615e+00 MaxBondDim=10
+Time: 2023-10-02 16:49:07 | Info: Sweep 7 E=1.4832149483e-02 error=1.8843779603e+00 MaxBondDim=8
+Time: 2023-10-02 16:49:07 | Info: Sweep 8 E=4.7708394296e-03 error=2.1089181897e+00 MaxBondDim=6
+Time: 2023-10-02 16:49:07 | Info: Sweep 9 E=9.3448872793e-04 error=4.1052937152e+00 MaxBondDim=5
+Time: 2023-10-02 16:49:07 | Info: Sweep 10 E=2.7933202347e-06 error=3.3354407280e+02 MaxBondDim=3
+Time: 2023-10-02 16:49:07 | Info: Sweep 11 E=1.3403793897e-07 error=1.9839773099e+01 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 12 E=3.2620447974e-08 error=3.1090158870e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 13 E=8.0287899487e-09 error=3.0629345371e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 14 E=1.9763789808e-09 error=3.0623736776e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 15 E=4.8706591907e-10 error=3.0577238181e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 16 E=1.2015164060e-10 error=3.0537600372e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 17 E=2.9664432672e-11 error=3.0503603062e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 18 E=7.3294070548e-12 error=3.0473168498e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 19 E=1.8121704359e-12 error=3.0445462025e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 20 E=4.4833387645e-13 error=3.0420109456e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 21 E=1.1098229483e-13 error=3.0396882866e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 22 E=2.7487465608e-14 error=3.0375601161e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 23 E=6.8112298549e-15 error=3.0356097494e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 24 E=1.6885306063e-15 error=3.0338207845e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 25 E=4.1876402767e-16 error=3.0321768221e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 26 E=1.0389461398e-16 error=3.0306615680e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 27 E=2.5785042920e-17 error=3.0292589118e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 28 E=6.4015247436e-18 error=3.0279533319e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 29 E=1.5897573005e-18 error=3.0267308359e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 30 E=3.9491430559e-19 error=3.0255753667e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 31 E=9.8128043601e-20 error=3.0244795585e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 32 E=2.4389213193e-20 error=3.0234198136e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 33 E=6.0633425170e-21 error=3.0224039999e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 34 E=1.5077654416e-21 error=3.0214096634e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 35 E=3.7502607629e-22 error=3.0204282767e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 36 E=9.3302021290e-23 error=3.0194850133e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 37 E=2.3220643877e-23 error=3.0180634862e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 38 E=5.7792830081e-24 error=3.0179108455e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 39 E=1.4386240035e-24 error=3.0172296540e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 40 E=3.5822370205e-25 error=3.0159933453e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 41 E=8.9222829529e-26 error=3.0149332177e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 42 E=2.2241895549e-26 error=3.0114759704e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 43 E=5.5671741529e-27 error=2.9951858766e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 44 E=1.4123504395e-27 error=2.9417796018e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 45 E=3.7602950823e-28 error=2.7559564038e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 46 E=1.1080905670e-28 error=2.3934907438e+00 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 47 E=8.0280972232e-29 error=3.8026550523e-01 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Sweep 48 E=8.0280972232e-29 error=1.3963941147e-16 MaxBondDim=1
+Time: 2023-10-02 16:49:07 | Info: Convergence reached after sweep 48
+Time: 2023-10-02 16:49:08 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 25.518440
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-02 16:49:08 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-02 16:49:08 | Info: Start DMRG run
+Time: 2023-10-02 16:49:08 | Info: Sweep 1 E=-6.8902456703e-02 error=1.4514270613e+04 MaxBondDim=5
+Time: 2023-10-02 16:49:08 | Info: Sweep 2 E=-6.8903880826e-02 error=2.0668258817e-05 MaxBondDim=6
+Time: 2023-10-02 16:49:08 | Info: Sweep 3 E=-6.8903969669e-02 error=1.2893659847e-06 MaxBondDim=6
+Time: 2023-10-02 16:49:08 | Info: Sweep 4 E=-6.8903974074e-02 error=6.3942258268e-08 MaxBondDim=6
+Time: 2023-10-02 16:49:08 | Info: Sweep 5 E=-6.8903974080e-02 error=8.1929411344e-11 MaxBondDim=6
+Time: 2023-10-02 16:49:08 | Info: Convergence reached after sweep 5
+Time: 2023-10-02 16:49:10 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.416384
+Final energy = -0.06890397 
+
+
+Time: 2023-10-02 16:50:21 | Info: 
+Max. bond dimension: 13
+Final energy 1 - excited state=0.737219595025
+
+
+Time: 2023-10-02 16:50:23 | Info: g=0.100000 energy=0.737220 intX=2.548309 intY=-0.000000
+Time: 2023-10-02 16:52:05 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 5
+Number of sites: 12
+Dimension of local Hilbert space:: 11
+
+Time: 2023-10-02 16:52:05 | Info: all m-states are considered
+Time: 2023-10-02 16:52:05 | Info: Dimension of local Hilbert space for chosen m-states: 11
+Time: 2023-10-02 16:52:05 | Info: only nearest-neighbour interactions
+Time: 2023-10-02 16:52:05 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-02 16:52:46 | Info: Sweep 1 E=2.5757066684e+00 error=3.8724296736e+02 MaxBondDim=10
+Time: 2023-10-02 16:52:46 | Info: Sweep 2 E=8.0391467544e-01 error=2.2039552792e+00 MaxBondDim=10
+Time: 2023-10-02 16:52:46 | Info: Sweep 3 E=2.3739419436e-01 error=2.3864125347e+00 MaxBondDim=10
+Time: 2023-10-02 16:52:47 | Info: Sweep 4 E=9.9441979206e-02 error=1.3872633696e+00 MaxBondDim=10
+Time: 2023-10-02 16:52:47 | Info: Sweep 5 E=3.4002023069e-02 error=1.9245900753e+00 MaxBondDim=10
+Time: 2023-10-02 16:52:47 | Info: Sweep 6 E=1.2950652573e-02 error=1.6255065432e+00 MaxBondDim=10
+Time: 2023-10-02 16:52:47 | Info: Sweep 7 E=1.0822036953e-03 error=1.0966926956e+01 MaxBondDim=8
+Time: 2023-10-02 16:52:47 | Info: Sweep 8 E=9.1722785692e-05 error=1.0798635280e+01 MaxBondDim=5
+Time: 2023-10-02 16:52:47 | Info: Sweep 9 E=2.6062098637e-06 error=3.4193936977e+01 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 10 E=1.5880587368e-08 error=1.6311293886e+02 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 11 E=2.9698697414e-10 error=5.2472336334e+01 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 12 E=2.5656760318e-11 error=1.0575388726e+01 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 13 E=4.8107465742e-12 error=4.3332180197e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 14 E=1.1377168515e-12 error=3.2284216570e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 15 E=2.8394026262e-13 error=3.0068880721e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 16 E=7.2401200490e-14 error=2.9217618036e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 17 E=1.8718392814e-14 error=2.8679175722e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 18 E=4.8930203662e-15 error=2.8255293078e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 19 E=1.2909646942e-15 error=2.7902046339e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 20 E=3.4329525263e-16 error=2.7605084379e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 21 E=9.1898380681e-17 error=2.7355963194e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 22 E=2.4738517732e-17 error=2.7147892883e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 23 E=6.6906125849e-18 error=2.6974966669e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 24 E=1.8165239083e-18 error=2.6831954451e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 25 E=4.9477383126e-19 error=2.6714227664e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 26 E=1.3511868480e-19 error=2.6617721079e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 27 E=3.6979397645e-20 error=2.6538909070e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 28 E=1.0138355648e-20 error=2.6474748891e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 29 E=2.7835329812e-21 error=2.6422617288e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 30 E=7.6511772395e-22 error=2.6380453545e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 31 E=2.1050797552e-22 error=2.6346258238e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 32 E=5.7961981418e-23 error=2.6318284912e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 33 E=1.5969067415e-23 error=2.6296409747e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 34 E=4.4013073202e-24 error=2.6282554826e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 35 E=1.2137239240e-24 error=2.6262837315e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 36 E=3.3488151869e-25 error=2.6243383294e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 37 E=9.2467196015e-26 error=2.6216251073e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 38 E=2.5584502916e-26 error=2.6141877104e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 39 E=7.1217671884e-27 error=2.5924374160e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 40 E=2.0263565861e-27 error=2.5145675924e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 41 E=6.2010267343e-28 error=2.2677759232e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 42 E=2.3366146761e-28 error=1.6538508029e+00 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 43 E=1.2650341989e-28 error=8.4707629101e-01 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 44 E=1.0719920861e-28 error=1.8007792717e-01 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 45 E=1.0714990480e-28 error=4.6013859431e-04 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Sweep 46 E=1.0714990480e-28 error=4.1849361360e-16 MaxBondDim=1
+Time: 2023-10-02 16:52:47 | Info: Convergence reached after sweep 46
+Time: 2023-10-02 16:52:48 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 28.105316
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-02 16:52:48 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-02 16:52:48 | Info: Start DMRG run
+Time: 2023-10-02 16:52:48 | Info: Sweep 1 E=-6.8902456703e-02 error=1.4514270613e+04 MaxBondDim=5
+Time: 2023-10-02 16:52:48 | Info: Sweep 2 E=-6.8903880826e-02 error=2.0668258817e-05 MaxBondDim=6
+Time: 2023-10-02 16:52:48 | Info: Sweep 3 E=-6.8903969669e-02 error=1.2893659837e-06 MaxBondDim=6
+Time: 2023-10-02 16:52:48 | Info: Sweep 4 E=-6.8903974074e-02 error=6.3942259275e-08 MaxBondDim=6
+Time: 2023-10-02 16:52:49 | Info: Sweep 5 E=-6.8903974080e-02 error=8.1980971703e-11 MaxBondDim=6
+Time: 2023-10-02 16:52:49 | Info: Convergence reached after sweep 5
+Time: 2023-10-02 16:52:50 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.387557
+Final energy = -0.06890397 
+
+
+Time: 2023-10-02 16:53:46 | Info: 
+Max. bond dimension: 13
+Final energy 1 - excited state=0.737219595026
+
+
+Time: 2023-10-02 16:53:47 | Info: g=0.100000 energy=0.737220 intX=2.548309 intY=-0.000000
+Time: 2023-10-02 16:54:02 | Info: 6.493877 6.493877
+Time: 2023-10-02 16:54:02 | Info: -0.068904 0.000000 -0.068904 0.000000 -0.068904 1.000000
+Time: 2023-10-02 16:54:09 | Info: 0.737220 6.493877 0.737220 6.493877 0.737220 0.000000
+Time: 2023-10-02 16:54:10 | Info: Calculation finished.
+Time: 2023-10-02 16:56:19 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 8
+Number of sites: 14
+Dimension of local Hilbert space:: 17
+
+Time: 2023-10-02 16:56:20 | Info: all m-states are considered
+Time: 2023-10-02 16:56:20 | Info: Dimension of local Hilbert space for chosen m-states: 17
+Time: 2023-10-02 16:56:20 | Info: only nearest-neighbour interactions
+Time: 2023-10-02 16:56:20 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-02 16:56:58 | Info: Sweep 1 E=9.5361522477e+00 error=1.0386409760e+02 MaxBondDim=10
+Time: 2023-10-02 16:56:58 | Info: Sweep 2 E=4.9668644490e+00 error=9.1995419760e-01 MaxBondDim=10
+Time: 2023-10-02 16:56:58 | Info: Sweep 3 E=4.2433519626e+00 error=1.7050494343e-01 MaxBondDim=10
+Time: 2023-10-02 16:56:59 | Info: Sweep 4 E=3.7550415578e+00 error=1.3004127847e-01 MaxBondDim=10
+Time: 2023-10-02 16:56:59 | Info: Sweep 5 E=3.4148274887e+00 error=9.9628479087e-02 MaxBondDim=10
+Time: 2023-10-02 16:56:59 | Info: Sweep 6 E=3.0638222567e+00 error=1.1456448926e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:00 | Info: Sweep 7 E=2.6590250815e+00 error=1.5223518499e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:00 | Info: Sweep 8 E=2.2219463518e+00 error=1.9670984827e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:00 | Info: Sweep 9 E=1.8019623456e+00 error=2.3307035648e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:00 | Info: Sweep 10 E=1.3629544787e+00 error=3.2210016818e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:00 | Info: Sweep 11 E=9.4065335588e-01 error=4.4894447057e-01 MaxBondDim=10
+Time: 2023-10-02 16:57:01 | Info: Sweep 12 E=4.3044591452e-01 error=1.1852997651e+00 MaxBondDim=10
+Time: 2023-10-02 16:57:01 | Info: Sweep 13 E=1.6100682740e-01 error=1.6734637374e+00 MaxBondDim=9
+Time: 2023-10-02 16:57:01 | Info: Sweep 14 E=1.0627225665e-01 error=5.1504101326e-01 MaxBondDim=8
+Time: 2023-10-02 16:57:01 | Info: Sweep 15 E=7.0455009342e-02 error=5.0837048555e-01 MaxBondDim=7
+Time: 2023-10-02 16:57:01 | Info: Sweep 16 E=3.9396006186e-02 error=7.8837948725e-01 MaxBondDim=7
+Time: 2023-10-02 16:57:01 | Info: Sweep 17 E=1.2442786021e-02 error=2.1661724409e+00 MaxBondDim=6
+Time: 2023-10-02 16:57:01 | Info: Sweep 18 E=2.7819041799e-03 error=3.4727586631e+00 MaxBondDim=6
+Time: 2023-10-02 16:57:02 | Info: Sweep 19 E=2.4715099677e-04 error=1.0255888976e+01 MaxBondDim=3
+Time: 2023-10-02 16:57:02 | Info: Sweep 20 E=4.1127382611e-07 error=5.9994025216e+02 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 21 E=6.5940985194e-08 error=5.2369985057e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 22 E=1.0590588676e-08 error=5.2263758144e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 23 E=2.3230083796e-09 error=3.5589971905e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 24 E=5.7833427790e-10 error=3.0167226263e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 25 E=1.4532859290e-10 error=2.9794940991e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 26 E=3.7486817964e-11 error=2.8767919178e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 27 E=1.0178631449e-11 error=2.6828937321e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 28 E=2.8918525315e-12 error=2.5197615845e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 29 E=8.8612277189e-13 error=2.2634896916e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 30 E=3.0620290752e-13 error=1.8939071124e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 31 E=1.2367841629e-13 error=1.4757990658e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 32 E=5.8213730052e-14 error=1.1245574915e+00 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 33 E=3.0690662409e-14 error=8.9678962535e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 34 E=1.7316245528e-14 error=7.7236239573e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 35 E=1.0125638945e-14 error=7.1013855250e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 36 E=6.0275874419e-15 error=6.7988254709e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 37 E=3.6203035496e-15 error=6.6493979283e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 38 E=2.1846378475e-15 error=6.5716416284e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 39 E=1.3218073809e-15 error=6.5276565936e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 40 E=8.0108980668e-16 error=6.5001148423e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 41 E=4.8606633516e-16 error=6.4810798185e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 42 E=2.9517872495e-16 error=6.4668485253e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 43 E=1.7937861273e-16 error=6.4556253646e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 44 E=1.0906807170e-16 error=6.4464824517e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 45 E=6.6347566424e-17 error=6.4388955887e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 46 E=4.0375731240e-17 error=6.4325361764e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 47 E=2.4578618643e-17 error=6.4271767365e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 48 E=1.4966295436e-17 error=6.4226469723e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 49 E=9.1153336879e-18 error=6.4188124636e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 50 E=5.5528606197e-18 error=6.4155636386e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:02 | Info: Sweep 51 E=3.3832480720e-18 error=6.4128095296e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 52 E=2.0616394759e-18 error=6.4104738559e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 53 E=1.2564466228e-18 error=6.4084923191e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 54 E=7.6580796462e-19 error=6.4068105950e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 55 E=4.6680286301e-19 error=6.4053827709e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 56 E=2.8456353472e-19 error=6.4041701083e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 57 E=1.7348113474e-19 error=6.4031400388e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 58 E=1.0576657016e-19 error=6.4022653357e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 59 E=6.4485821062e-20 error=6.4015233759e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 60 E=3.9318475774e-20 error=6.4008954551e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 61 E=2.3974145295e-20 error=6.4003660148e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 62 E=1.4618450914e-20 error=6.3999218774e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 63 E=8.9139333621e-21 error=6.3995514887e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 64 E=5.4355756856e-21 error=6.3992443077e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 65 E=3.3145794520e-21 error=6.3989904730e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 66 E=2.0212352941e-21 error=6.3987807935e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 67 E=1.2325652402e-21 error=6.3986069721e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 68 E=7.5163466588e-22 error=6.3984618610e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 69 E=4.5836022719e-22 error=6.3983395874e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 70 E=2.7951801746e-22 error=6.3982354824e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 71 E=1.7045708680e-22 error=6.3981458743e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 72 E=1.0394949496e-22 error=6.3980678178e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 73 E=6.3391573668e-23 error=6.3979988105e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 74 E=3.8658262668e-23 error=6.3979365065e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 75 E=2.3575161199e-23 error=6.3978784032e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 76 E=1.4377008116e-23 error=6.3978214446e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 77 E=8.7676651201e-24 error=6.3977614551e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 78 E=5.3468896573e-24 error=6.3976922697e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 79 E=3.2607748940e-24 error=6.3976043458e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 80 E=1.9885800467e-24 error=6.3975038342e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 81 E=1.2127419840e-24 error=6.3973876798e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 82 E=7.3964710185e-25 error=6.3962243744e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 83 E=4.5113221445e-25 error=6.3953510338e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 84 E=2.7518172025e-25 error=6.3939746449e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 85 E=1.6787878268e-25 error=6.3916914248e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 86 E=1.0244037364e-25 error=6.3879510312e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 87 E=6.2532935175e-26 error=6.3818271689e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 88 E=3.8195490727e-26 error=6.3718109089e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 89 E=2.3353365422e-26 error=6.3554545719e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 90 E=1.4301935063e-26 error=6.3288151706e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 91 E=8.7819445040e-27 error=6.2856131194e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 92 E=5.4155930480e-27 error=6.2160347466e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 93 E=3.3626326299e-27 error=6.1052176791e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 94 E=2.1106402182e-27 error=5.9318134894e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 95 E=1.3471159996e-27 error=5.6678431469e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 96 E=8.8148280008e-28 error=5.2823855377e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 97 E=5.9751764065e-28 error=4.7524146587e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 98 E=4.2434224883e-28 error=4.0810311089e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 99 E=3.1873170000e-28 error=3.3134623517e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 100 E=2.5198599599e-28 error=2.6487862449e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:03 | Info: Sweep 101 E=2.1239399570e-28 error=1.8640828411e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:04 | Info: Sweep 102 E=1.8888234238e-28 error=1.2447777290e-01 MaxBondDim=1
+Time: 2023-10-02 16:57:04 | Info: Sweep 103 E=1.8964108037e-28 error=4.0009157847e-03 MaxBondDim=1
+Time: 2023-10-02 16:57:04 | Info: Sweep 104 E=1.8964108037e-28 error=1.1822741879e-16 MaxBondDim=1
+Time: 2023-10-02 16:57:04 | Info: Convergence reached after sweep 104
+Time: 2023-10-02 16:57:04 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 29.852931
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-02 16:57:04 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-02 16:57:04 | Info: Start DMRG run
+Time: 2023-10-02 16:57:05 | Info: Sweep 1 E=-8.1435774459e-02 error=1.2280615521e+04 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 2 E=-8.1437263180e-02 error=1.8280590941e-05 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 3 E=-8.1437275125e-02 error=1.4668390947e-07 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 4 E=-8.1437278067e-02 error=3.6119096051e-08 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 5 E=-8.1437279944e-02 error=2.3055456339e-08 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 6 E=-8.1437280899e-02 error=1.1724215714e-08 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Sweep 7 E=-8.1437281431e-02 error=6.5358328345e-09 MaxBondDim=5
+Time: 2023-10-02 16:57:05 | Info: Convergence reached after sweep 7
+Time: 2023-10-02 16:57:07 | Info: 
+Max. bond dimension: 5
+DMRG Duration: 1.031181
+Final energy = -0.08143728 
+
+
+Time: 2023-10-02 17:11:26 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 4
+Number of sites: 6
+Dimension of local Hilbert space:: 9
+
+Time: 2023-10-02 17:11:26 | Info: all m-states are considered
+Time: 2023-10-02 17:11:26 | Info: Dimension of local Hilbert space for chosen m-states: 9
+Time: 2023-10-02 17:11:26 | Info: only nearest-neighbour interactions
+Time: 2023-10-02 17:11:26 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-02 17:12:05 | Info: Sweep 1 E=2.1244000709e+00 error=4.6972112908e+02 MaxBondDim=10
+Time: 2023-10-02 17:12:05 | Info: Sweep 2 E=7.7150739705e-01 error=1.7535705802e+00 MaxBondDim=10
+Time: 2023-10-02 17:12:05 | Info: Sweep 3 E=8.1479354572e-02 error=8.4687470353e+00 MaxBondDim=10
+Time: 2023-10-02 17:12:05 | Info: Sweep 4 E=1.1550310488e-02 error=6.0542999391e+00 MaxBondDim=10
+Time: 2023-10-02 17:12:05 | Info: Sweep 5 E=2.5766934309e-03 error=3.4826095140e+00 MaxBondDim=8
+Time: 2023-10-02 17:12:05 | Info: Sweep 6 E=7.7301853622e-04 error=2.3332880263e+00 MaxBondDim=6
+Time: 2023-10-02 17:12:05 | Info: Sweep 7 E=2.7482906851e-04 error=1.8127247980e+00 MaxBondDim=5
+Time: 2023-10-02 17:12:05 | Info: Sweep 8 E=7.6587537978e-05 error=2.5884306477e+00 MaxBondDim=3
+Time: 2023-10-02 17:12:05 | Info: Sweep 9 E=2.7728574992e-10 error=2.7620337762e+05 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 10 E=8.7422594401e-13 error=3.1617858732e+02 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 11 E=1.1134293987e-13 error=6.8516513488e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 12 E=1.4240693412e-14 error=6.8186459500e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 13 E=1.8249603541e-15 error=6.8032891949e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 14 E=2.3410917830e-16 error=6.7953387701e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 15 E=3.0048670672e-17 error=6.7909995041e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 16 E=3.8580360447e-18 error=6.7885925179e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 17 E=4.9542982280e-19 error=6.7872503172e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 18 E=6.3626798553e-20 error=6.7864961631e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 19 E=8.1718973469e-21 error=6.7860496592e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 20 E=1.0496090739e-21 error=6.7856580606e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 21 E=1.3481689833e-22 error=6.7854414910e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 22 E=1.7315538947e-23 error=6.7858909698e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 23 E=2.2241676166e-24 error=6.7851771685e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 24 E=2.8574071861e-25 error=6.7838665326e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 25 E=3.6696171299e-26 error=6.7866629811e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 26 E=4.7206964328e-27 error=6.7734655938e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 27 E=6.2839219029e-28 error=6.5123410280e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 28 E=1.0474950927e-28 error=4.9989988945e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 29 E=3.5106056329e-29 error=1.9838016633e+00 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 30 E=3.4662322070e-29 error=1.2801631070e-02 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Sweep 31 E=3.4662322070e-29 error=1.6170855045e-16 MaxBondDim=1
+Time: 2023-10-02 17:12:05 | Info: Convergence reached after sweep 31
+Time: 2023-10-02 17:12:05 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 24.616696
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-02 17:12:05 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-02 17:12:06 | Info: Start DMRG run
+Time: 2023-10-02 17:12:06 | Info: Sweep 1 E=-3.1302400129e-02 error=3.1947432091e+04 MaxBondDim=5
+Time: 2023-10-02 17:12:06 | Info: Sweep 2 E=-3.1302873216e-02 error=1.5113210661e-05 MaxBondDim=6
+Time: 2023-10-02 17:12:06 | Info: Sweep 3 E=-3.1302880608e-02 error=2.3614190125e-07 MaxBondDim=6
+Time: 2023-10-02 17:12:06 | Info: Sweep 4 E=-3.1302880604e-02 error=1.1338128941e-10 MaxBondDim=6
+Time: 2023-10-02 17:12:06 | Info: Convergence reached after sweep 4
+Time: 2023-10-02 17:12:07 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.113118
+Final energy = -0.03130288 
+
+
+Time: 2023-10-02 17:12:23 | Info: 
+Max. bond dimension: 12
+Final energy 1 - excited state=0.790798289771
+
+
+Time: 2023-10-02 17:12:24 | Info: g=0.100000 energy=0.790798 intX=1.830681 intY=0.000000
+Time: 2023-10-02 17:12:37 | Info: 3.351392 3.351392
+Time: 2023-10-02 17:12:37 | Info: -0.031303 0.000000 -0.031303 0.000000 -0.031303 1.000000
+Time: 2023-10-02 17:12:44 | Info: 0.790798 3.351392 0.790798 3.351392 0.790798 0.000000
+Time: 2023-10-02 17:12:44 | Info: Calculation finished.
+Time: 2023-10-03 10:54:39 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 4
+Number of sites: 6
+Dimension of local Hilbert space:: 9
+
+Time: 2023-10-03 10:54:39 | Info: all m-states are considered
+Time: 2023-10-03 10:54:39 | Info: Dimension of local Hilbert space for chosen m-states: 9
+Time: 2023-10-03 10:54:39 | Info: only nearest-neighbour interactions
+Time: 2023-10-03 10:54:39 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-03 10:55:20 | Info: Sweep 1 E=1.6168631006e+00 error=6.1748155210e+02 MaxBondDim=10
+Time: 2023-10-03 10:55:21 | Info: Sweep 2 E=3.3580516800e-01 error=3.8148845066e+00 MaxBondDim=10
+Time: 2023-10-03 10:55:21 | Info: Sweep 3 E=7.6450143466e-02 error=3.3924726988e+00 MaxBondDim=10
+Time: 2023-10-03 10:55:21 | Info: Sweep 4 E=2.0836000194e-02 error=2.6691372026e+00 MaxBondDim=9
+Time: 2023-10-03 10:55:21 | Info: Sweep 5 E=6.4009868494e-03 error=2.2551231059e+00 MaxBondDim=7
+Time: 2023-10-03 10:55:21 | Info: Sweep 6 E=2.4062728341e-03 error=1.6601251357e+00 MaxBondDim=6
+Time: 2023-10-03 10:55:21 | Info: Sweep 7 E=8.7724591397e-04 error=1.7429855139e+00 MaxBondDim=6
+Time: 2023-10-03 10:55:21 | Info: Sweep 8 E=1.4435578737e-04 error=5.0769708644e+00 MaxBondDim=4
+Time: 2023-10-03 10:55:21 | Info: Sweep 9 E=1.9710345601e-09 error=7.3237587640e+04 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 10 E=1.2607288699e-10 error=1.4634087607e+01 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 11 E=1.0953579426e-11 error=1.0509743262e+01 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 12 E=1.1203347365e-12 error=8.7770595421e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 13 E=1.1990955671e-13 error=8.3431646919e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 14 E=1.2947167918e-14 error=8.2614506485e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 15 E=1.4001029188e-15 error=8.2472972837e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 16 E=1.5144620697e-16 error=8.2448860019e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 17 E=1.6382344839e-17 error=8.2444768105e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 18 E=1.7721364395e-18 error=8.2444038023e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 19 E=1.9169830279e-19 error=8.2444033865e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 20 E=2.0736680258e-20 error=8.2444065494e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 21 E=2.2431692099e-21 error=8.2443673737e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 22 E=2.4264890309e-22 error=8.2445058740e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 23 E=2.6248617378e-23 error=8.2442546435e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 24 E=2.8391501200e-24 error=8.2452375778e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 25 E=3.0702762086e-25 error=8.2472140193e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 26 E=3.3272596214e-26 error=8.2276424385e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 27 E=3.6131165625e-27 error=8.2088355408e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 28 E=4.1159290262e-28 error=7.7783743101e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 29 E=6.9227476994e-29 error=4.9455135516e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 30 E=4.2194970776e-29 error=6.4065706697e-01 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Sweep 31 E=4.2194970776e-29 error=0.0000000000e+00 MaxBondDim=1
+Time: 2023-10-03 10:55:21 | Info: Convergence reached after sweep 31
+Time: 2023-10-03 10:55:21 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 26.326556
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-03 10:55:21 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-03 10:55:22 | Info: Start DMRG run
+Time: 2023-10-03 10:55:22 | Info: Sweep 1 E=-3.1302400129e-02 error=3.1947432091e+04 MaxBondDim=5
+Time: 2023-10-03 10:55:22 | Info: Sweep 2 E=-3.1302873216e-02 error=1.5113210547e-05 MaxBondDim=6
+Time: 2023-10-03 10:55:22 | Info: Sweep 3 E=-3.1302880608e-02 error=2.3614201475e-07 MaxBondDim=6
+Time: 2023-10-03 10:55:22 | Info: Sweep 4 E=-3.1302880604e-02 error=1.1338128941e-10 MaxBondDim=6
+Time: 2023-10-03 10:55:22 | Info: Convergence reached after sweep 4
+Time: 2023-10-03 10:55:23 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.113260
+Final energy = -0.03130288 
+
+
+Time: 2023-10-03 10:55:40 | Info: 
+Max. bond dimension: 12
+Final energy 1 - excited state=0.790798289771
+
+
+Time: 2023-10-03 10:55:41 | Info: g=0.100000 energy=0.790798 intX=-1.830681 intY=0.000000
+Time: 2023-10-03 10:55:54 | Info: 3.351392 3.351392
+Time: 2023-10-03 10:55:55 | Info: -0.031303 0.000000 -0.031303 0.000000 -0.031303 1.000000
+Time: 2023-10-03 10:56:00 | Info: 0.790798 3.351392 0.790798 3.351392 0.790798 -0.000000
+Time: 2023-10-03 10:56:01 | Info: Calculation finished.
+Time: 2023-10-04 01:04:52 | Info: 
+#######################################
+###########Basis information###########
+#######################################
+mmax = 4
+Number of sites: 6
+Dimension of local Hilbert space:: 9
+
+Time: 2023-10-04 01:04:52 | Info: all m-states are considered
+Time: 2023-10-04 01:04:52 | Info: Dimension of local Hilbert space for chosen m-states: 9
+Time: 2023-10-04 01:04:52 | Info: only nearest-neighbour interactions
+Time: 2023-10-04 01:04:52 | Info: 
+#################################################################################
+##################################
+####Calculate free rotor chain####
+##################################
+
+Time: 2023-10-04 01:05:32 | Info: Sweep 1 E=1.9855557266e+00 error=5.0263733771e+02 MaxBondDim=10
+Time: 2023-10-04 01:05:32 | Info: Sweep 2 E=5.4997514830e-01 error=2.6102644505e+00 MaxBondDim=10
+Time: 2023-10-04 01:05:32 | Info: Sweep 3 E=6.3050929099e-02 error=7.7227128316e+00 MaxBondDim=10
+Time: 2023-10-04 01:05:32 | Info: Sweep 4 E=1.3638588011e-02 error=3.6229806962e+00 MaxBondDim=9
+Time: 2023-10-04 01:05:32 | Info: Sweep 5 E=3.8260394796e-03 error=2.5646751906e+00 MaxBondDim=8
+Time: 2023-10-04 01:05:32 | Info: Sweep 6 E=1.2115192329e-03 error=2.1580509626e+00 MaxBondDim=7
+Time: 2023-10-04 01:05:32 | Info: Sweep 7 E=4.4192885743e-04 error=1.7414349901e+00 MaxBondDim=7
+Time: 2023-10-04 01:05:32 | Info: Sweep 8 E=1.6628617293e-04 error=1.6576404378e+00 MaxBondDim=5
+Time: 2023-10-04 01:05:32 | Info: Sweep 9 E=1.9519121871e-05 error=7.5191421025e+00 MaxBondDim=2
+Time: 2023-10-04 01:05:32 | Info: Sweep 10 E=5.3290705182e-14 error=3.6627629060e+08 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 11 E=1.2183237484e-15 error=4.2741005008e+01 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 12 E=3.5527136788e-15 error=6.5707235128e-01 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 13 E=1.7763568394e-15 error=1.0000000000e+00 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 14 E=3.5527136788e-15 error=5.0000000000e-01 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 15 E=1.7763568394e-15 error=1.0000000000e+00 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 16 E=3.5527136788e-15 error=5.0000000000e-01 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Sweep 17 E=3.5527136788e-15 error=0.0000000000e+00 MaxBondDim=1
+Time: 2023-10-04 01:05:33 | Info: Convergence reached after sweep 17
+Time: 2023-10-04 01:05:33 | Info: 
+Max. bond dimension: 1
+DMRG Duration: 25.548034
+Final energy = 0.00000000 
+
+Initial state calculated
+###############################################################################
+
+Time: 2023-10-04 01:05:33 | Info: 
+##################################
+########g= 0.100 ########
+##################################
+
+####DMRG calculation####
+Construct MPO
+Time: 2023-10-04 01:05:33 | Info: Start DMRG run
+Time: 2023-10-04 01:05:33 | Info: Sweep 1 E=-3.1302400129e-02 error=3.1947432091e+04 MaxBondDim=5
+Time: 2023-10-04 01:05:33 | Info: Sweep 2 E=-3.1302873216e-02 error=1.5113210774e-05 MaxBondDim=6
+Time: 2023-10-04 01:05:33 | Info: Sweep 3 E=-3.1302880608e-02 error=2.3614178776e-07 MaxBondDim=6
+Time: 2023-10-04 01:05:33 | Info: Sweep 4 E=-3.1302880604e-02 error=1.1349478419e-10 MaxBondDim=6
+Time: 2023-10-04 01:05:33 | Info: Convergence reached after sweep 4
+Time: 2023-10-04 01:05:35 | Info: 
+Max. bond dimension: 6
+DMRG Duration: 0.111697
+Final energy = -0.03130288 
+
+
+Time: 2023-10-04 01:05:51 | Info: 
+Max. bond dimension: 12
+Final energy 1 - excited state=0.790798289771
+
+
+Time: 2023-10-04 01:05:52 | Info: g=0.100000 energy=0.790798 intX=1.830681 intY=-0.000000
+Time: 2023-10-04 01:06:05 | Info: 3.351392 3.351392
+Time: 2023-10-04 01:06:05 | Info: -0.031303 0.000000 -0.031303 0.000000 -0.031303 1.000000
+Time: 2023-10-04 01:06:11 | Info: 0.790798 3.351392 0.790798 3.351392 0.790798 -0.000000
+Time: 2023-10-04 01:06:12 | Info: Calculation finished.

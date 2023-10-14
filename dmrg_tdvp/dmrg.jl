@@ -87,11 +87,13 @@ function main(data::Dict{Any, Any})
 
     #Define output files#
     if Nstates == 0
-        df = DataFrame(dmrg_duration=Float64[], mmax=Int[],Nsites=Int[],interaction=String[],basis=String[],
+        df = DataFrame(dmrg_duration=Float64[], bondsize=Int[], memory=Int[], 
+                mmax=Int[],Nsites=Int[],interaction=String[],basis=String[],
                 E_angle=[], E_strength=[],
                 g=[],energy=[], SvN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
     else
-        df = DataFrame(dmrg_duration=Float64[], mmax=Int[],Nsites=Int[],interaction=String[], basis=String[],
+        df = DataFrame(dmrg_duration=Float64[], bondsize=Int[],memory=Int[],
+                mmax=Int[],Nsites=Int[],interaction=String[], basis=String[],
                 E_angle=[], E_strength=[],
                 g=[],istate=Int[],energy=[], SvN=[], renyi=[],mux=[],muy=[], xcorr=[],ycorr=[],corr=[])
     end
@@ -101,44 +103,49 @@ function main(data::Dict{Any, Any})
         create_file(joinpath(output_path,"schmidt_values_"*string(i)*".txt"),evod,mmax,Nsites)
     end
     
+
+    #Non-interacting rotors as initial guess#
+    initial_states = nothing
+    sites=siteinds("PlaRotor",Nsites; conserve_qns=false, dim=mmax)
+    ampo0 = AutoMPO()
+    #Define Hamiltonian as MPO#
+    for j=1:Nsites
+        ampo0 += 1.0,"T",j
+        #Electric field#
+        ampo0 += -cos(angle)*Estrength,"X",j
+        ampo0 += -sin(angle)*Estrength*fac2,"Y",j
+    end    
+    H0 = MPO(ampo0,sites)
+    #Define accuracy parameters#
+    sweeps = Sweeps(Nsweep)
+    #Set up initial state#
+    psi0 = randomMPS(sites,10) # global
+    
+    maxdim!(sweeps,10) # gradually increase states kept
+    cutoff!(sweeps,SVD_error) # desired truncation error
+    
+    #Perform DMRG runs#
+    obs = DemoObserver(e_cutoff)
+    duration = @elapsed begin
+        energy,psi = dmrg(H0,psi0,sweeps,observer=obs, outputlevel=0)
+    end
+    psi0 = psi #global
+
+    maxbond=maxlinkdim(psi)
+    # push!(bonddim_log, maxbond)
+    @info @sprintf """\nMax. bond dimension: %i
+    DMRG Duration: %f
+    Final energy = %.8f \n
+    Initial state calculated
+    ###############################################################################
+    """ maxbond duration energy
+
+
     for ig = 0:Ng-1
         duration_log = Vector{Float64}()
-        #Non-interacting rotors as initial guess#
-        if ig == 0
-            sites=siteinds("PlaRotor",Nsites; conserve_qns=false, dim=mmax)
-            ampo0 = AutoMPO()
-            #Define Hamiltonian as MPO#
-            for j=1:Nsites
-                ampo0 += 1.0,"T",j
-                #Electric field#
-                ampo0 += -cos(angle)*Estrength,"X",j
-                ampo0 += -sin(angle)*Estrength*fac2,"Y",j
-            end    
-            H0 = MPO(ampo0,sites)
-            #Define accuracy parameters#
-            sweeps = Sweeps(Nsweep)
-            #Set up initial state#
-            psi0 = randomMPS(sites,10) # global
-            
-            maxdim!(sweeps,10) # gradually increase states kept
-            cutoff!(sweeps,SVD_error) # desired truncation error
-            
-            #Perform DMRG runs#
-            obs = DemoObserver(e_cutoff)
-            duration = @elapsed begin
-                energy,psi = dmrg(H0,psi0,sweeps,observer=obs, outputlevel=0)
-            end
-            psi0 = psi #global
+        bonddim_log = Vector{Int}()
+        memory_log = Vector{Int}()
 
-            maxbond=maxlinkdim(psi)
-            @info @sprintf """\nMax. bond dimension: %i
-            DMRG Duration: %f
-            Final energy = %.8f \n
-            Initial state calculated
-            ###############################################################################
-            """ maxbond duration energy
-
-        end    
         g = gstart + ig*delta_g
         
         @info @sprintf("""\n##################################
@@ -149,7 +156,6 @@ function main(data::Dict{Any, Any})
             Construct MPO""", g
         )
         
-
         # setup MPO for the correct Hamiltonian
         sites = siteinds(psi0)
         ampo = AutoMPO() 
@@ -204,7 +210,9 @@ function main(data::Dict{Any, Any})
 
         obs = DemoObserver(e_cutoff)
         duration = @elapsed begin
-            energy,psi = dmrg(H,psi0,sweeps,observer=obs, outputlevel=0)
+            memory = @allocated(tmp = dmrg(H,psi0,sweeps,observer=obs, outputlevel=0))
+            energy,psi = tmp
+            push!(memory_log, memory)
         end
         push!(duration_log, duration)
         mps_out=h5open(joinpath(output_path,"psi0_g"*string(round(g,digits=3))),"w")
@@ -214,6 +222,7 @@ function main(data::Dict{Any, Any})
         psi0 = copy(psi)
 
         maxbond=maxlinkdim(psi)
+        push!(bonddim_log, maxbond)
         @info @sprintf """\nMax. bond dimension: %i
         DMRG Duration: %f
         Final energy = %.8f \n
@@ -244,16 +253,17 @@ function main(data::Dict{Any, Any})
 
                 psi_init = randomMPS(sites,Nbonds)
                 #energy ,psi = dmrg(H,wavefunction[1:istates],initial_states[istates] ,sweeps, observer=obs, outputlevel=0)
-                println(Nsweep)
-                println(maxdim)
-                obs = DemoObserver(e_cutoff)
+      
                 duration = @elapsed begin
-                    energy ,psi = dmrg(H,wavefunction[1:istates],psi_init; nsweeps=Nsweep, maxdim=maxdim, cutoff=cutoff,weight=weight)
+                    memory = @allocated(tmp = dmrg(H,wavefunction[1:istates],psi_init; nsweeps=Nsweep, maxdim=maxdim, cutoff=cutoff,weight=weight))
+                    push!(memory_log, memory)
+                    energy ,psi = tmp
                 end
                 push!(duration_log, duration)
                 initial_states[istates] = psi # global
 
                 maxbond=maxlinkdim(psi)
+                push!(bonddim_log, maxbond)
                 @info @sprintf("""\nMax. bond dimension: %i
                     Final energy %i - excited state=%.12f\n
                     """, maxbond, istates, round(energy,digits=12))
@@ -335,7 +345,7 @@ function main(data::Dict{Any, Any})
                 
                 #Calculate summed dipole moment and fluctuation#
                 MuX,MuY = polarization(wavefunction[istates],Nsites,evod)   
-                push!(df, [duration_log[istates],
+                push!(df, [duration_log[istates], bonddim_log[istates], memory_log[istates],
                     mmax, Nsites, pairs, evod, 
                     angle, Estrength,
                     g, istates, energies[istates], SvN, Renyi, MuX, MuY, xcorr, ycorr, (xcorr+ycorr)/(Nsites-1)])
@@ -353,6 +363,7 @@ function main(data::Dict{Any, Any})
             write_output(joinpath(output_path, "schmidt_values.txt"),g,Svalues)
             
             push!(df, [
+                duration_log[1], bonddim_log[1], memory_log[1],
                 mmax, Nsites, pairs, evod, 
                 angle, Estrength,
                 g, energy, SvN, Renyi, MuX, MuY, xcorr, ycorr, (xcorr+ycorr)/(Nsites-1)])
@@ -367,11 +378,16 @@ end
 data = YAML.load_file("input_quick.yml")
 
 if length(ARGS) > 0
-    data["outputpath"] = joinpath(data["outputpath"],args[1])
-    data["gstart"] = parse(Float64, args[2])
-    data["dg"] = parse(Float64, args[3])
-    data["Ng"] = parse(Int, args[4])
-    data["m"] = parse(Int,args[5])
+    data["outputpath"] = joinpath(data["outputpath"],ARGS[1])
+    if !isdir(data["outputpath"])
+        mkdir(data["outputpath"])
+    end
+    data["gstart"] = parse(Float64, ARGS[2])
+    data["dg"] = parse(Float64, ARGS[3])
+    data["Ng"] = parse(Int, ARGS[4])
+    data["m"] = parse(Int,ARGS[5])
+    data["Nsites"] = parse(Int,ARGS[6])
+    data["mbond"] = data["Nsites"] ÷ 2
 end
 
 main(data)

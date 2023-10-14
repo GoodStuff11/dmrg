@@ -68,16 +68,19 @@ end
 
 
 function main()
-    g = 2
-    Nsites = 6
+    g = 1.2
     pairs = "nearest"
-    for g in 0.1:0.1:30
+    for g in 0.1:0.1:3
+        Nsites = 6
+        println("Nsites",Nsites)
         for mmax in 2:5
+            println("mmax",mmax)
             energies = 20
             Estrength = 0
             angle = 90
-            outputpath = "C:\\Users\\jonat\\OneDrive\\Documents\\programming\\AnacondaProjects\\PHYS437A\\dmrg\\output_data"
-            filename = joinpath(outputpath, "ED_benchmark_v3.csv")
+            outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data"
+            
+            filename = joinpath(outputpath, "ED_benchmark_v3_graham.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
             else
@@ -110,8 +113,19 @@ function main()
             end
             data["t_diagonalization"] = t1
             data["t_metrics"] = t2
+            
+            i= 0
+            for vec in vecs
+                # println(i," ",real(dot(conj(vec), even_reflection_projection(vec; Nsites=Nsites, mmax=mmax))))
+                println(i," ",real(dot(conj(vec), even_inversion_projection(vec; Nsites=Nsites, mmax=mmax))))
+                
+                # println(dot(conj(vec), odd_projection(vec; Nsites=Nsites, mmax=mmax)))
+                # println()
+                i += 1
+            end
             push!(df, data)
-            CSV.write(filename, df)
+            error("hey")
+            # CSV.write(filename, df)
 
         end
     end

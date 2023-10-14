@@ -2,7 +2,7 @@ module observables
 using LinearAlgebra
 import KrylovKit
 
-export correlation, vN_entropy
+export correlation, vN_entropy, even_reflection_projection, odd_reflection_projection, even_inversion_projection
 
 function correlation(state;Nsites, mmax)
     ## 1/(N-1) sum_1^(N-1) 1/2(U_i D_(i+1) + D_i U_(i+1))
@@ -33,7 +33,8 @@ function vN_entropy(state; Nsites, mmax, split)
     state_matrix =  reshape(state,(dim^(Nsites-split),dim^split))'
     vector_size = dim^split # dim^(Nsites-split)
     n_singular_values = min(dim^(Nsites-split), dim^split)
-    vals, _, _, info = KrylovKit.svdsolve(state_matrix, ones((vector_size,)), min(n_singular_values,30), :LR)
+    # using a random initial vector because that is unlikely to cause svdsolve to crash
+    vals, _, _, info = KrylovKit.svdsolve(state_matrix, rand((vector_size,)), min(n_singular_values,30), :LR)
 
     SvN = 0.0
     renyi = 0.0
@@ -47,4 +48,66 @@ function vN_entropy(state; Nsites, mmax, split)
     # println(renyi)
     return SvN, renyi
 end
+
+function even_reflection_projection(state; Nsites, mmax)
+    dim = 2*mmax + 1
+    projected_state = zero(state)
+
+    for index in 0:length(state)-1
+        reflected_index = sum([((index÷dim^k)%dim)*dim^(Nsites-k-1) for k in 0:Nsites-1])
+        # println(index," ",reflected_index, " ", dim^Nsites)
+        if reflected_index == index
+            # |abcba><abcba|
+            projected_state[index+1] = state[index+1]
+        else
+            # (|abcde><abcde| + |edcba><abcde|)/2
+            projected_state[index+1] += state[index+1]/2
+            projected_state[reflected_index+1] += state[index+1]/2
+        end
+    end
+
+    return projected_state
 end
+
+function odd_reflection_projection(state; Nsites, mmax)
+    dim = 2*mmax + 1
+    projected_state = zero(state)
+
+    for index in 0:length(state)-1
+        reflected_index = sum([((index÷dim^k)%dim)*dim^(Nsites-k-1) for k in 0:Nsites-1])
+        # println(index," ",reflected_index, " ", dim^Nsites)
+        if reflected_index != index
+            # (|abcde><abcde| - |edcba><abcde|)/2
+            projected_state[index+1] += state[index+1]/2
+            projected_state[reflected_index+1] -= state[index+1]/2
+        end
+    end
+
+    return projected_state
+end
+
+function even_inversion_projection(state; Nsites, mmax)
+    # all m -> all -m
+    dim = 2*mmax + 1
+    projected_state = zero(state)
+
+    for index in 0:length(state)-1
+        inverted_index = sum([(dim-(index÷dim^k)%dim-1)*dim^k for k in 0:Nsites-1])
+        # println(index," ",inverted_index, " ", dim^Nsites)
+        if inverted_index == index
+            # |abcba><abcba|
+            projected_state[index+1] = state[index+1]
+        else
+            # (|abcde><abcde| + |edcba><abcde|)/2
+            projected_state[index+1] += state[index+1]/2
+            projected_state[inverted_index+1] += state[index+1]/2
+        end
+    end
+
+    return projected_state
+end
+
+
+
+end   
+

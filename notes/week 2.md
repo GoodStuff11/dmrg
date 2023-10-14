@@ -112,3 +112,79 @@ It seems the total correlation $\sum_i\langle|\psi|e_i e_{i+1}|\psi\rangle$ conv
 |6       | 3    |0.015207s |  12   |5.549 MiB| LinAlg |
 |6       | 4    |0.010361s | 440    |7.872 MiB| Krylov |
 |6       | 4    |0.069506s |  12   |24.716 MiB| LinAlg |
+
+
+# Benchmarking difference between DMRG and ED
+
+Now that I've gotten dmrg and ed working with all the metrics that I care about and the proper means of saving data, I can perform extensive runs. 
+
+I've found that the runtime of dmrg is highly dependent on the maxlinkdim parameter, since it will start on a high bond dimension, taking a long time, and then get to the proper bond dimension which is considerably lower. There is an option to make the initial bond dimension more automatic, using observers, except it seems like the energy convergence isn't as good. Thus I will keep a manual constant initial bond dimension, making sure that it isn't much higher than the bond length which it will converge to.
+
+For my benchmarking, I will test out the following sets of parameters
+
+* mmax=1..5
+* Nsites=6..10
+* g=1
+
+# Comparison with Henrik Larsson data
+When I compare my exact ED data to his exact data, I see some artifacts of sort around $g=0.75$ for the second excited state, in both energy, correlation and entropy. 
+
+![Alt text](image-7.png)
+![Alt text](image-8.png)
+
+![Alt text](image-2.png)
+![Alt text](image-3.png)
+
+![Alt text](image-9.png)
+![Alt text](image-10.png)
+
+When I compare my ED to the ttns data, I get total agreement. Excet for the ground state entropy.
+
+![Alt text](image-4.png)
+![Alt text](image-5.png)
+![Alt text](image-6.png)
+
+![Alt text](image-13.png)
+![Alt text](image-14.png)
+
+![Alt text](image-11.png)
+![Alt text](image-12.png)
+
+# ED Parity
+I found an even and odd projection operator in order to find the parity of energy eigenvectors. By parity, I mean under reflection symmetry.
+
+$$P_{even}=\frac{1}{2}(|abcde\rangle +  |edcba\rangle)(\langle abcde| +  \langle edcba|) +\cdots + |abcba\rangle\langle abcba | +\cdots $$
+$$P_{odd}=\frac{1}{2}(|abcde\rangle -  |edcba\rangle)(\langle abcde| - \langle edcba|) +\cdots $$
+
+Upon writing this as an operator acting on my state, I found that (at least in the cases I've tried), the ground state and first excited state are even and the third and fourth excited state are odd. For sufficiently high $mmax$, the parity will swap every $n$ or every other $n$.
+
+$mmax=2$  and $Nsites=6$
+|n | $\langle E_n \|P_{reflection-even}\|E_n\rangle$ | $\langle E_n \|P_{inversion-even}\|E_n\rangle$
+|--|----|-----|
+| 0 | 1   | 1|
+| 1 | 1   |1 |
+| 2 | 0   |1 |
+| 3 | 0   |0 |
+| 4 | 1   |0 |
+| 5 | 1   |1 |
+| 6 | 0   |0|
+| 7 | 1   |0 |
+| 8 | 0   |1 |
+| 9 | 0   | 0 |
+| 10 | 1   | 0|
+| 11 | 1   |1|
+| 12 | 0   |1|
+| 13 | 1   |1|
+| 14 | 0   |0|
+| 15 | 1   |0|
+| 16 | 0   |1|
+| 17 | 1   |0|
+| 18 | 1   |0|
+| 19 | 1   |1 |
+
+# Comparing TTN to MPS
+I compared the performance of TTN from ITensorNetworks.jl to MPS from ITensors on a large 1d ising model. 
+
+I found that the dmrg for TTN and MPS are quite comparable in duration, however it takes significantly longer to initialize the Hamiltonian TTL than the MPO (it scales worse). So I think it's better to use MPS rather than TTN. 
+
+However, I find that for the really complicated ising models (with more than nearest neighbours interaction), MPS and TTN dmrg give different answers for the ground state energy.
