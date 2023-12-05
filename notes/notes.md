@@ -224,13 +224,13 @@ When testing this, I found that in the present code, when running DMRG for incre
 
 If we keep the bond dimension at a reasonable value, DMRG won't take a long time even for very large system sizes. And typically, we will have a reasonable value when it is allowed to change. Though if the bond dimension is extra high, you will spend extra time doing computation, but you will obtain a more accurate result.
 
-![Alt text](image-15.png)
+![Alt text](image-29.png)
 
 Compared to when I tested over many $g$ values.
 
-![Alt text](image-16.png)
+![Alt text](image-30.png)
 
-![Alt text](image-17.png)
+![Alt text](image-31.png)
 
 ![Alt text](image-21.png)
 
