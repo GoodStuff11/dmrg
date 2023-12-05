@@ -2,7 +2,7 @@ module observables
 using LinearAlgebra
 import KrylovKit
 
-export correlation, vN_entropy, even_reflection_projection, odd_reflection_projection, even_inversion_projection
+export correlation, vN_entropy, even_reflection_projection, odd_reflection_projection, even_inversion_projection, parity_projection
 
 function correlation(state;Nsites, mmax)
     ## 1/(N-1) sum_1^(N-1) 1/2(U_i D_(i+1) + D_i U_(i+1))
@@ -107,6 +107,23 @@ function even_inversion_projection(state; Nsites, mmax)
     return projected_state
 end
 
+function parity_projection(state; Nsites, mmax, parity="even")
+    # sum m = even/odd
+    projected_state = zero(state)
+
+    parity_increment = 0
+    if parity == "even"
+        parity_increment = 1
+    end
+    index_zero_odd = (mmax*Nsites)%2
+    for index in 1:length(state)
+        if (index + parity_increment) % 2 == index_zero_odd
+            projected_state[index] = state[index]
+        end
+    end
+
+    return projected_state
+end
 
 
 end   

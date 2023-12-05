@@ -1,8 +1,8 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.9.3"
+julia_version = "1.9.1"
 manifest_format = "2.0"
-project_hash = "2b98036a8ff8053d687b17c888be4dbd6a6d73db"
+project_hash = "7ae85c960158704d0ca568c8a0edcd12afdfcaf2"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -126,9 +126,9 @@ version = "0.1.1"
 
 [[deps.BenchmarkTools]]
 deps = ["JSON", "Logging", "Printf", "Profile", "Statistics", "UUIDs"]
-git-tree-sha1 = "d9a9701b899b30332bbcb3e1679c41cce81fb0e8"
+git-tree-sha1 = "f1f03a9fa24271160ed7e73051fba3c1a759b53f"
 uuid = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
-version = "1.3.2"
+version = "1.4.0"
 
 [[deps.BitFlags]]
 git-tree-sha1 = "43b1a4a8f797c1cddadf60499a8a077d4af2cd2d"
@@ -274,7 +274,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.0.5+0"
+version = "1.0.2+0"
 
 [[deps.CompositionsBase]]
 git-tree-sha1 = "802bb88cd69dfd1509f6670416bd4434015693ad"
@@ -293,9 +293,9 @@ version = "2.2.1"
 
 [[deps.Conda]]
 deps = ["Downloads", "JSON", "VersionParsing"]
-git-tree-sha1 = "8c86e48c0db1564a1d49548d3515ced5d604c408"
+git-tree-sha1 = "51cab8e982c5b598eea9c8ceaced4b58d9dd37c9"
 uuid = "8f4d0f93-b110-5947-807f-2305c1781a2d"
-version = "1.9.1"
+version = "1.10.0"
 
 [[deps.ConstructionBase]]
 deps = ["LinearAlgebra"]
@@ -676,9 +676,9 @@ version = "0.3.23"
 
 [[deps.ITensorNetworks]]
 deps = ["AbstractTrees", "Combinatorics", "Compat", "DataGraphs", "DataStructures", "Dictionaries", "Distributions", "DocStringExtensions", "Graphs", "GraphsFlows", "ITensors", "IsApprox", "IterTools", "KrylovKit", "LinearAlgebra", "NamedGraphs", "Observers", "Printf", "Requires", "SimpleTraits", "SparseArrayKit", "SplitApplyCombine", "StaticArrays", "Suppressor", "TimerOutputs"]
-path = "C:\\Users\\jonat\\.julia\\dev\\ITensorNetworks"
+path = "../ITensorNetworks.jl"
 uuid = "2919e153-833c-4bdc-8836-1ea460a35fc7"
-version = "0.3.10"
+version = "0.3.6"
 
 [[deps.ITensorTDVP]]
 deps = ["ITensors", "KrylovKit", "Observers", "Printf", "TimerOutputs"]
@@ -787,9 +787,9 @@ version = "2.1.91+0"
 
 [[deps.JuMP]]
 deps = ["LinearAlgebra", "MacroTools", "MathOptInterface", "MutableArithmetics", "OrderedCollections", "Printf", "SnoopPrecompile", "SparseArrays"]
-git-tree-sha1 = "25b2fcda4d455b6f93ac753730d741340ba4a4fe"
+git-tree-sha1 = "cd161958e8b47f9696a6b03f563afb4e5fe8f703"
 uuid = "4076af6c-e467-56ae-b986-b466b2749572"
-version = "1.16.0"
+version = "1.17.0"
 
     [deps.JuMP.extensions]
     JuMPDimensionalDataExt = "DimensionalData"
@@ -1026,9 +1026,9 @@ uuid = "d6f4376e-aef5-505a-96c1-9c027394607a"
 
 [[deps.MathOptInterface]]
 deps = ["BenchmarkTools", "CodecBzip2", "CodecZlib", "DataStructures", "ForwardDiff", "JSON", "LinearAlgebra", "MutableArithmetics", "NaNMath", "OrderedCollections", "PrecompileTools", "Printf", "SparseArrays", "SpecialFunctions", "Test", "Unicode"]
-git-tree-sha1 = "13b3d40084d04e609e0509730f05215fb2a2fba4"
+git-tree-sha1 = "362ae34a5291a79e16b8eb87b5738532c5e799ff"
 uuid = "b8f27783-ece8-5eb3-8dc8-9495eed66fee"
-version = "1.21.0"
+version = "1.23.0"
 
 [[deps.MbedTLS]]
 deps = ["Dates", "MbedTLS_jll", "MozillaCACerts_jll", "Random", "Sockets"]
@@ -1073,9 +1073,9 @@ version = "0.10.2"
 
 [[deps.MutableArithmetics]]
 deps = ["LinearAlgebra", "SparseArrays", "Test"]
-git-tree-sha1 = "6985021d02ab8c509c841bb8b2becd3145a7b490"
+git-tree-sha1 = "806eea990fb41f9b36f1253e5697aa645bf6a9f8"
 uuid = "d8a4904e-b15c-11e9-3269-09a3773c0cb0"
-version = "1.3.3"
+version = "1.4.0"
 
 [[deps.NDTensors]]
 deps = ["Adapt", "Compat", "Dictionaries", "FLoops", "Folds", "Functors", "HDF5", "LinearAlgebra", "Random", "Requires", "SimpleTraits", "SplitApplyCombine", "StaticArrays", "Strided", "TimerOutputs", "TupleTools"]
@@ -1121,9 +1121,9 @@ version = "0.1.5"
 
 [[deps.NamedGraphs]]
 deps = ["AbstractTrees", "Dictionaries", "Graphs", "GraphsFlows", "LinearAlgebra", "SimpleTraits", "SparseArrays", "SplitApplyCombine", "SymRCM"]
-git-tree-sha1 = "045cd65d95136cd3100bb13749ae615b51696824"
+git-tree-sha1 = "e25e3fdac28d591cfa5ed16ecfa64b0047442969"
 uuid = "678767b0-92e7-4007-89e4-4527a8725b19"
-version = "0.1.14"
+version = "0.1.15"
 
 [[deps.NearestNeighbors]]
 deps = ["Distances", "StaticArrays"]
@@ -1234,7 +1234,7 @@ version = "0.42.2+0"
 [[deps.Pkg]]
 deps = ["Artifacts", "Dates", "Downloads", "FileWatching", "LibGit2", "Libdl", "Logging", "Markdown", "Printf", "REPL", "Random", "SHA", "Serialization", "TOML", "Tar", "UUIDs", "p7zip_jll"]
 uuid = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
-version = "1.9.2"
+version = "1.9.0"
 
 [[deps.PlotThemes]]
 deps = ["PlotUtils", "Statistics"]
@@ -1307,9 +1307,9 @@ uuid = "9abbd945-dff8-562f-b5e8-e1ebf5ef1b79"
 
 [[deps.PyCall]]
 deps = ["Conda", "Dates", "Libdl", "LinearAlgebra", "MacroTools", "Serialization", "VersionParsing"]
-git-tree-sha1 = "43d304ac6f0354755f1d60730ece8c499980f7ba"
+git-tree-sha1 = "1cb97fa63a3629c6d892af4f76fcc4ad8191837c"
 uuid = "438e738f-606a-5dbb-bf0a-cddfbfd45ab0"
-version = "1.96.1"
+version = "1.96.2"
 
 [[deps.PyPlot]]
 deps = ["Colors", "LaTeXStrings", "PyCall", "Sockets", "Test", "VersionParsing"]
@@ -2008,6 +2008,6 @@ version = "3.5.0+0"
 
 [[deps.xkbcommon_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "Wayland_jll", "Wayland_protocols_jll", "Xorg_libxcb_jll", "Xorg_xkeyboard_config_jll"]
-git-tree-sha1 = "9ebfc140cc56e8c2156a15ceac2f0302e327ac0a"
+git-tree-sha1 = "9c304562909ab2bab0262639bd4f444d7bc2be37"
 uuid = "d8fb68d0-12a3-5cfd-a85a-d49703b185fd"
-version = "1.4.1+0"
+version = "1.4.1+1"

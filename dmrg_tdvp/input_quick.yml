@@ -1,6 +1,12 @@
 # Hamiltonian
-Nsites: 6
-m: 5 # equals N for DVR
+Nsites_min: 6
+Nsites_max: 6
+Nsites_diff: 2
+
+mmax_min: 5 # equals N for DVR
+mmax_max: 5 # equals N for DVR
+mmax_diff: 5 # equals N for DVR
+
 pairs: nearest #interaction pairs #nearest,allpairs
 #External electric field#
 angle: 90.0 #in degrees
@@ -13,18 +19,22 @@ maxdim: 30 # dmrg bond dimension
 ecutoff: 1e-8
 SVD: 1e-8
 
-#Interaction strength g#
-gstart: 0.1
-dg: 0.1 # difference between g values
-Ng: 30 # number of g values to try
+#tdvp
+dt: 0.01
+N_timesteps: 5000
 
-mbond: 3 # entropy split
+#Interaction strength g#
+gstart: 1
+dg: 1 # difference between g values
+Ng: 1 # number of g values to try
+
+s_split: -1 # entropy split
 
 #Basis states#
 states: all #all,even,odd,dvr
 
 #Excited states to log (0 means only ground state)#
-Nstates: 20
+Nstates: 0
 
 #Output path
-outputpath: /home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/hl_comparison_dmrg #C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437A\dmrg\output_data 
+outputpath: /home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/tdvp_test1 #C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437A\dmrg\output_data 
