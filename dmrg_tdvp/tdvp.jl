@@ -114,6 +114,7 @@ let
 	
 	sites=siteinds("PlaRotor",Nsites)
 
+	# load ground state to evolve
 	mps_out=h5open(string("psi0_g",string(round(g,digits=3))),"r")
 	psi=read(mps_out,"MPS",MPS)
 	close(mps_out)

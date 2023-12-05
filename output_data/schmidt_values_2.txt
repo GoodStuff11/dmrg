@@ -1,3 +1,0 @@
-# mmax= 4
-# m-states: all states (FBR)
-# Nr. of sites: 6
