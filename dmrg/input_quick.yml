@@ -1,0 +1,33 @@
+#Basis size#
+filename: "psi_exp3_none_none_N=6_m=5_g"
+m: 3 # equals N for DVR
+
+#Number of sites#
+Nsites: 6
+Nbond: 50
+Nsweep: 100
+ecutoff: 1e-8
+SVD: 1e-8
+
+#Interaction strength#
+gstart: 1.1
+dg: 0.1
+Ng: 1
+mbond: 5
+
+#Interaction pairs#
+pairs: nearest #nearest,allpairs
+
+#Basis states#
+states: all #all,even,odd,dvr
+
+#External electric field#
+angle: 90.0 #in degrees
+strength: 0.0
+
+#Excited states#
+Nstates: 20
+
+#symmetry
+ParitySymmetry: 'none' #'even', 'odd', 'none'
+InversionSymmetry: 'none' #'even', 'odd', 'none'

@@ -191,6 +191,31 @@ I found that the dmrg for TTN and MPS are quite comparable in duration, however 
 
 However, I find that for the really complicated ising models (with more than nearest neighbours interaction), MPS and TTN dmrg give different answers for the ground state energy.
 
+TTN dmrg also doesn't offer the ability to compute the the lowest energy of state that is orthogonal to other states, as ITensors has. Thus it may be able to compute the ground state but it cannot compute excited states. TTN does have a dmrg_x function which computes excited states, however this seems to compute some random excited state as supposed to an excited state of your choice, so it's not very useful. 
+
+I also found that when compute excited states using orthogonality on dmrg, the runtime per energy eigenstate increases linearly (as would be expected). When I computed the energy eigenstates for 50 atoms in the ising model, the time taken for the 10th energy eigenstate took twice as long as the first iteration.
+
+
+# TDVP testing
+
+When using TDVP, I had to realize that the time that is inputted into tdvp defaults to imaginary time corresponding to the evolution operator $\hat{U}(\tau)=e^{H\tau}$. To convert this to a time evolution operator, you need to input $\hat{U}(-it)$.
+
+I tested out ITensors tdvp for a simple ising model to see how accurately it can make predictions. I tested it out for the case of two atoms with Hamiltonian $S^z\otimes S^z$. DMRG doesn't give the an $S^z\otimes I$ as the solution since the ground states of the Hamiltonian are degenerate. So to get the state $|00\rangle$, I found the ground state of a different Hamiltonian. With this ground state I evaluated tdvp to compute the time evolution of $|00\rangle$ for the Hamiltonian $S^x\otimes I$. The $|00\rangle$ coefficient should be $\cos(t/2)$ according to my calculations, so I compared the tdvp calculation of $\langle 00|\hat{U}|00\rangle$ to this. This gave the following plot:
+
+![Alt text](image-15.png)
+
+From this, it seems that the error increases linearly with time, and even after a significant amount of time (many periods), the error is still on the order of $10^{-14}$.
+
+
+With normal ITensorNetworks, doing the same thing with tree tensor networks gives the following plot. The difference isn't noteable.
+
+![Alt text](image-16.png)
+
+The difference between the two methods is plotted here:
+
+![Alt text](image-17.png)
+
+When doing this for a larger system ()
 # More benchmarking
 
 I was running dmrg to compute the ground state for a bunch of $N$ and $mmax$ values. We wanted to look at varying $N$ while keeping $mmax$ constant (maybe also keeping bond dimension constant). As well, keeping $N$ constant while varying $mmax$. We care about the time to run each of these and all the other information present there.
@@ -199,13 +224,13 @@ When testing this, I found that in the present code, when running DMRG for incre
 
 If we keep the bond dimension at a reasonable value, DMRG won't take a long time even for very large system sizes. And typically, we will have a reasonable value when it is allowed to change. Though if the bond dimension is extra high, you will spend extra time doing computation, but you will obtain a more accurate result.
 
-![Alt text](image-15.png)
+![Alt text](image-29.png)
 
 Compared to when I tested over many $g$ values.
 
-![Alt text](image-16.png)
+![Alt text](image-30.png)
 
-![Alt text](image-17.png)
+![Alt text](image-31.png)
 
 ![Alt text](image-21.png)
 
