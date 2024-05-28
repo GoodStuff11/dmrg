@@ -14,6 +14,50 @@
   return dim
 end
 =#
+
+
+function create_Hamiltonian(g, sites, Nsecond; Estrength=0,angle=0, fac1=1, fac2=1)
+	Nsites = length(sites)
+	ampo = AutoMPO()
+	for i=1:Nsites-1
+		ampo += 1.0,"T",i
+		for j=i+1:Nsecond[i]
+			c=g/((abs(j-i))^3)
+			if evod == "dvr"
+				# y_iy_j#
+				ampo += 1.0*c*fac1,"Y",i,"Y",j
+				# 2*x_ix_j#
+				ampo += -2.0*c,"X",i,"X",j
+			else
+				# up up
+				ampo +=-.75*c,"Up",i,"Up",j
+				# up down
+				ampo +=-.25*c,"Up",i,"Down",j
+				# down up 
+				ampo +=-.25*c,"Down",i,"Up",j
+				# down down
+				ampo +=-.75*c,"Down",i,"Down",j
+			end
+		end
+		#Electric field#
+		
+		if !iszero(Estrength)
+			ampo += -cos(angle)*Estrength,"X",i
+			ampo += -sin(angle)*Estrength*fac2,"Y",i
+		end
+	end
+	ampo += 1.0,"T",Nsites
+	#Electric field#
+
+	if !iszero(Estrength)
+		ampo += -cos(angle)*Estrength,"X",Nsites
+		ampo += -sin(angle)*Estrength*fac2,"Y",Nsites
+	end
+
+	H = MPO(ampo,sites)
+	return H
+end
+
 function label_states_by_parity(dim::Int)
     even = []
     odd = []
