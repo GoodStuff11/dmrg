@@ -1,6 +1,6 @@
 #Basis size#
 filename: "psi_exp3_none_none_N=6_m=5_g"
-m: 3 # equals N for DVR
+m: 5 # equals N for DVR
 
 #Number of sites#
 Nsites: 6

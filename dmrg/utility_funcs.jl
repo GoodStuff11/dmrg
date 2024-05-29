@@ -73,6 +73,7 @@ end# util function to save data in obs
 function MPS_to_ITensorNetwork(mps)
     return ITensorNetwork([mps[v] for v in eachindex(mps)])
 end
+
 function TTN_to_MPS(tn)
     return MPS(collect(ITensorNetworks.vertex_data(tn)))
     # TTN([tmp[v] for v in eachindex(tmp)])
