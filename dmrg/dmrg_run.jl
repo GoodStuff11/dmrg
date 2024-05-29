@@ -84,8 +84,6 @@ else
     fac2 = 1.0im
 end
 
-g = 1.1
-
 sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_L=false)
 
 Random.seed!(1234)
@@ -131,7 +129,8 @@ Hij = zeros(excitation_number, excitation_number)
 Sij = zeros(excitation_number, excitation_number) # we want H x = lambda S x
 tmp = zeros(excitation_number, excitation_number)
 
-for g=0.1:0.05:1.6
+g = gstart
+for _ in 1:Ng
     H = create_Hamiltonian(g, sites, Nsecond)
     energy_eigenstates = MPS[]
 
@@ -167,6 +166,7 @@ for g=0.1:0.05:1.6
     end
     prev_x = F.vectors
     previous_eigenstates = copy(energy_eigenstates)
+    g += delta_g
 end
 connection = connection[2:end]
 data = hcat(energies...)'
