@@ -1,15 +1,15 @@
 using ITensors
-using ITensorNetworks
-using Graphs
+# using ITensorNetworks
+using Pkg
 using Observers
 using Printf
-# using ITensors.HDF5
 using TupleTools
 using JLD
+using YAML
+using ITensors.HDF5
 import Random
 
-# using PyPlot
-# push!(LOAD_PATH,pwd())
+push!(LOAD_PATH,pwd())
 include("input_data.jl")
 include("matrices.jl")
 include("states.jl")
@@ -84,8 +84,6 @@ else
     fac2 = 1.0im
 end
 
-g = 1.1
-
 sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_L=false)
 
 Random.seed!(1234)
@@ -99,78 +97,33 @@ end
 # psi = MPS(sites, [1 for i in 1:Nsites])
 
 
-function find_mapping(mat)
-    mapping = []
-    rows = size(mat)[2]
-    for i=1:rows
-        index = argmax(abs.(mat[i:end,i]))
-        if abs(mat[index, i]) < 0.3
-            push!(mapping, nothing)
-        else
-            push!(mapping, index)
-        end
-    end
-    return mapping
-end
-
-
 sweeps = Sweeps(30)
 maxdim!(sweeps,20)
 setcutoff!(sweeps, 1e-10)
 
 excitation_number = 20
-Tij = zeros(excitation_number, excitation_number)
-previous_eigenstates = MPS[]
-prev_x = nothing
-energies = []
-g_values = []
-connection = []
 
+g = gstart
+H = create_Hamiltonian(g, sites, Nsecond)
+energy_eigenstates = MPS[]
 
-Hij = zeros(excitation_number, excitation_number)
-Sij = zeros(excitation_number, excitation_number) # we want H x = lambda S x
-tmp = zeros(excitation_number, excitation_number)
-
-for g=0.1:0.05:1.6
-    H = create_Hamiltonian(g, sites, Nsecond)
-    energy_eigenstates = MPS[]
-
-    push!(g_values, g)
-    # finding excited state with DMRG
-    for i in 1:excitation_number
-        energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=0, weight=30)
-        push!(energy_eigenstates, ψ)
-    end
-    # compute <i|H|j> and <i|j>
-    for i in 1:excitation_number
-        for j in 1:excitation_number
-            Hij[i,j] = inner(energy_eigenstates[i], apply(H, energy_eigenstates[j]))
-            Sij[i,j] = inner(energy_eigenstates[i], energy_eigenstates[j])
-        end
-    end
-    # compute generalized eigenvalue problem to rediagonalize
-    F = eigen(Hij, Sij)
-    push!(energies, F.values)
-
-    # comparing new eigenstates with previous to see which they map to
-    if length(previous_eigenstates) > 0
-        for i in 1:excitation_number
-            for j in 1:excitation_number
-                Tij[i,j] = inner(energy_eigenstates[i], previous_eigenstates[j])
-            end
-        end
-        tmp = F.vectors
-
-        push!(connection, find_mapping(F.vectors' * Tij *prev_x))
-    else
-        push!(connection, nothing)
-    end
-    prev_x = F.vectors
-    previous_eigenstates = copy(energy_eigenstates)
+# finding excited state with DMRG
+for i in 1:excitation_number
+    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=0, weight=30)
+    push!(energy_eigenstates, ψ)
+    println(i)
 end
-connection = connection[2:end]
-data = hcat(energies...)'
+
+# using Printf
+f = h5open(@sprintf("../output_data/DMRG_runs/DMRG_g=%0.2f.jld", g),"w")
+for i in 1:20
+    write(f, string("energy_eigenstates/", i), energy_eigenstates[i])
+end
+write(f,"N", Nsites)
+write(f,"mmax", mmax)
+write(f, "bond_dim", get_maxdims(sweeps))
+close(f)
+# save(@sprintf("../output_data/DMRG_runs/DMRG_g=%0.2f.jld", g),"energy_eigenstates", energy_eigenstates,
+#     "N", Nsites,"mmax", mmax, "bond_dim", get_maxdims(sweeps))
 
 
-save("../output_data/DMRG_data.jld", "energies", data, "connections", 
-    connection, "N", Nsites,"mmax", mmax, "bond_dim", get_maxdims(sweeps))
