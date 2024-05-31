@@ -1,12 +1,11 @@
 using ITensors
 # using ITensorNetworks
-using Pkg
 using Observers
-using Printf
+using Printf: Format, format
 using TupleTools
 using JLD
 using YAML
-using ITensors.HDF5
+using HDF5
 import Random
 
 push!(LOAD_PATH,pwd())
@@ -22,7 +21,7 @@ mmax, Nsites, Nbonds, Nsweep, e_cutoff,
 		SVD_error, gstart, delta_g, Ng,
         mbond, pairs, evod, angle, Estrength, 
 		Nstates, output_filename, parity_symmetry_type,
-		inversion_symmetry_type = get_input_data("input_quick.yml"; default_filename="psi0_N6_g")
+		inversion_symmetry_type = get_input_data("input_quick.yml"; default_filename="test")
 
 ###{tdvp_filename}.h5 will be where the data is stored (written to on the fly while propagating every 5th sweep by default)
 ###ToDo: we might want to parse the name for that file from input
@@ -97,26 +96,25 @@ end
 # psi = MPS(sites, [1 for i in 1:Nsites])
 
 
-sweeps = Sweeps(30)
-maxdim!(sweeps,20)
-setcutoff!(sweeps, 1e-10)
-
-excitation_number = 20
+sweeps = Sweeps(Nsweep)
+maxdim!(sweeps,Nbonds)
+setcutoff!(sweeps, e_cutoff)
 
 g = gstart
 H = create_Hamiltonian(g, sites, Nsecond)
 energy_eigenstates = MPS[]
 
 # finding excited state with DMRG
-for i in 1:excitation_number
+for i in 1:Nstates
     energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=0, weight=30)
     push!(energy_eigenstates, ψ)
-    println(i)
+    println("Excitation: ", i)
 end
 
 # using Printf
-f = h5open(@sprintf("../output_data/DMRG_runs/DMRG_g=%0.2f.jld", g),"w")
-for i in 1:20
+println(format(Format(output_filename), g, Nsites))
+f = h5open(format(Format(output_filename), g, Nsites),"w")
+for i in 1:Nstates
     write(f, string("energy_eigenstates/", i), energy_eigenstates[i])
 end
 write(f,"N", Nsites)

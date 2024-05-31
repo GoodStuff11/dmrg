@@ -106,12 +106,12 @@ function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs)
 end
 
 function main()
-    g = 1.2
-    pairs = "nearest"
-    Nsites = 2
-    @show Nsites
-    mmax = 1
-    initial_state = rand(ComplexF64, (2*mmax+1)^Nsites)
+    # g = 1.2
+    # pairs = "nearest"
+    # Nsites = 6
+    # @show Nsites
+    # mmax = 1
+    # initial_state = rand(ComplexF64, (2*mmax+1)^Nsites)
 
     # state1 = odd_reflection_projection(even_inversion_projection(initial_state; 
     #         Nsites=Nsites, mmax=mmax);
@@ -120,18 +120,18 @@ function main()
     #         Nsites=Nsites, mmax=mmax);
     #         Nsites=Nsites, mmax=mmax)
     # println(dot(state1,state2)/(sqrt(dot(state1,state1))*sqrt(dot(state2,state2))))
-    for mmax in 2:3
+    for mmax in 3:3
         println("mmax",mmax)
         Nsites = 6
         println("Nsites",Nsites)
         prev_vecs = nothing
-        for g in 0.01:0.05:3
+        for g in 1:30
             energies = 20
             Estrength = 0
             angle = 90
             outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data"
             
-            filename = joinpath(outputpath, "deleteme2.csv")
+            filename = joinpath(outputpath, "deleteme.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
             else
@@ -187,7 +187,7 @@ function main()
             # println(data)
             prev_vecs = vecs[1:energies]
             push!(df, data)
-            CSV.write(filename, df)
+            CSV.write(filename, df) 
         end
     end
 end
