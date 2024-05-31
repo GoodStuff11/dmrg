@@ -1,12 +1,12 @@
 #Basis size#
-filename: "psi_exp3_none_none_N=6_m=5_g"
+filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d.jld"
 m: 5 # equals N for DVR
 
 #Number of sites#
-Nsites: 6
-Nbond: 50
-Nsweep: 100
-ecutoff: 1e-8
+Nsites: 100
+Nbond: 40
+Nsweep: 30
+ecutoff: 1e-10
 SVD: 1e-8
 
 #Interaction strength#
