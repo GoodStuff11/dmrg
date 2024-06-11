@@ -2,11 +2,11 @@ module observables
 using LinearAlgebra
 import KrylovKit
 
-export correlation, vN_entropy, even_reflection_projection, odd_reflection_projection, even_inversion_projection, parity_projection
+export correlation, vN_entropy, reflection_projection, inversion_projection_m, parity_projection_m, inversion_projection_dvr
 
 function correlation(state;Nsites, mmax)
     ## 1/(N-1) sum_1^(N-1) 1/2(U_i D_(i+1) + D_i U_(i+1))
-    dim = 2*mmax + 1
+    dim = Int(2*mmax + 1)
     final_state = zeros(ComplexF64, size(state))
     for i in 1:Nsites-1
         j = i+1
@@ -29,7 +29,7 @@ function correlation(state;Nsites, mmax)
 end
 
 function vN_entropy(state; Nsites, mmax, split)
-    dim = 2*mmax + 1
+    dim = Int(2*mmax + 1)
     state_matrix =  reshape(state,(dim^(Nsites-split),dim^split))'
     vector_size = dim^split # dim^(Nsites-split)
     n_singular_values = min(dim^(Nsites-split), dim^split)
@@ -49,65 +49,51 @@ function vN_entropy(state; Nsites, mmax, split)
     return SvN, renyi
 end
 
-function even_reflection_projection(state; Nsites, mmax)
-    dim = 2*mmax + 1
-    projected_state = zero(state)
-
-    for index in 0:length(state)-1
-        reflected_index = sum([((index÷dim^k)%dim)*dim^(Nsites-k-1) for k in 0:Nsites-1])
-        # println(index," ",reflected_index, " ", dim^Nsites)
-        if reflected_index == index
+function projection_helper(state, projected_state, index, transformed_index,parity)
+    if parity == "even"
+        if transformed_index == index
             # |abcba><abcba|
             projected_state[index+1] = state[index+1]
         else
             # (|abcde><abcde| + |edcba><abcde|)/2
             projected_state[index+1] += state[index+1]/2
-            projected_state[reflected_index+1] += state[index+1]/2
+            projected_state[transformed_index+1] += state[index+1]/2
         end
+    else
+        # (|abcde><abcde| - |edcba><abcde|)/2
+        projected_state[index+1] += state[index+1]/2
+        projected_state[transformed_index+1] -= state[index+1]/2
     end
-
-    return projected_state
 end
 
-function odd_reflection_projection(state; Nsites, mmax)
-    dim = 2*mmax + 1
+function reflection_projection(state; Nsites, mmax, parity="even")
+    dim = Int(2*mmax + 1)
     projected_state = zero(state)
 
     for index in 0:length(state)-1
         reflected_index = sum([((index÷dim^k)%dim)*dim^(Nsites-k-1) for k in 0:Nsites-1])
         # println(index," ",reflected_index, " ", dim^Nsites)
-        if reflected_index != index
-            # (|abcde><abcde| - |edcba><abcde|)/2
-            projected_state[index+1] += state[index+1]/2
-            projected_state[reflected_index+1] -= state[index+1]/2
-        end
+        projection_helper(state, projected_state, index, reflected_index, parity)
     end
 
     return projected_state
 end
 
-function even_inversion_projection(state; Nsites, mmax)
+
+function inversion_projection_m(state; Nsites, mmax, parity="even")
     # all m -> all -m
-    dim = 2*mmax + 1
+    dim = Int(2*mmax + 1)
     projected_state = zero(state)
 
     for index in 0:length(state)-1
         inverted_index = sum([(dim-(index÷dim^k)%dim-1)*dim^k for k in 0:Nsites-1])
-        # println(index," ",inverted_index, " ", dim^Nsites)
-        if inverted_index == index
-            # |abcba><abcba|
-            projected_state[index+1] = state[index+1]
-        else
-            # (|abcde><abcde| + |edcba><abcde|)/2
-            projected_state[index+1] += state[index+1]/2
-            projected_state[inverted_index+1] += state[index+1]/2
-        end
+        projection_helper(state, projected_state, index, inverted_index, parity)
     end
 
     return projected_state
 end
 
-function parity_projection(state; Nsites, mmax, parity="even")
+function parity_projection_m(state; Nsites, mmax, parity="even")
     # sum m = even/odd
     projected_state = zero(state)
 
@@ -116,7 +102,7 @@ function parity_projection(state; Nsites, mmax, parity="even")
         parity_increment = 1
     end
     index_zero_odd = (mmax*Nsites)%2
-    for index in 1:length(state)
+    for index in eachindex(state)
         if (index + parity_increment) % 2 == index_zero_odd
             projected_state[index] = state[index]
         end
@@ -125,6 +111,19 @@ function parity_projection(state; Nsites, mmax, parity="even")
     return projected_state
 end
 
+function inversion_projection_dvr(state; Nsites, mmax, parity="even")
+    # updown: phi -> -phi
+
+    dim = Int(2*mmax + 1)
+    projected_state = zero(state)
+
+    for index in 0:length(state)-1
+        inverted_index = sum([((dim - (index÷dim^k)%dim)%dim)*dim^k for k in 0:Nsites-1])
+        projection_helper(state, projected_state, index, inverted_index, parity)
+    end
+
+    return projected_state
+end
 
 end   
 

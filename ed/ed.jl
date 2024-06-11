@@ -4,7 +4,7 @@ using DataFrames
 using LinearAlgebra
 
 push!(LOAD_PATH,joinpath(pwd(),"ed"))
-using observables
+include("observables.jl")
 
 function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     dim = 2*mmax + 1
@@ -65,7 +65,45 @@ function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     end
     return final_state
 end
+function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs)
+    dim = Int(2*mmax + 1)
+    final_state = zeros(ComplexF64, size(state))
+    for i in 1:Nsites
+    #     # Ti
+        for k in 1:dim^Nsites # iterate over all states
+            mk = ((k-1)%dim^i) ÷ dim^(i-1) # m value at atom from 0 to dim-1
+            φi = mk/dim*2π
+            
+            # diagonal
+            final_state[k] += state[k]*((-cos(angle)*cos(φi) - sin(angle)*sin(φi)) * Estrength + mmax*(mmax+1)/3)
+            
+            for l in 0:dim-1
+                if l == mk
+                    continue
+                end
+                final_state[k] += (-1)^(mk - l) * cos(π*(mk - l)/dim)/(2*sin(π*(mk - l)/dim)^2)*state[k + (l - mk)*dim^(i-1)]
+            end
+        end
+        # Vij
+        if g == 0
+            continue
+        end
 
+        site_pairing = (pairs == "nearest") ? min(i+1, Nsites) : Nsites
+        for j in (i+1):site_pairing
+            c = g/abs(j-i)^3
+            for k in 1:dim^Nsites
+                mk_i = ((k-1)%dim^i) ÷ dim^(i-1)
+                φi = mk_i/dim*2π
+                mk_j = ((k-1)%dim^j) ÷ dim^(j-1)
+                φj = mk_j/dim*2π
+                
+                final_state[k] += c*(sin(φi)*sin(φj) - 2* cos(φi)*cos(φj))*state[k]
+            end
+        end
+    end
+    return final_state
+end
 
 function main()
     # g = 1.2
@@ -154,4 +192,12 @@ function main()
     end
 end
 
-main()
+function main2()
+    mmax = 4
+    Nsites = 6
+    for g in 1:30
+
+    end
+end
+
+# main()

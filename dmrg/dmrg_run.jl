@@ -97,7 +97,7 @@ end
 
 
 sweeps = Sweeps(Nsweep)
-maxdim!(sweeps,Nbonds)
+maxdim!(sweeps,10,10,10,10,10,10,10,20,20,20,20,20,20,30,30,30,30,Nbonds)
 setcutoff!(sweeps, e_cutoff)
 
 g = gstart
@@ -106,7 +106,7 @@ energy_eigenstates = MPS[]
 
 # finding excited state with DMRG
 for i in 1:Nstates
-    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=0, weight=30)
+    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=30)
     push!(energy_eigenstates, ψ)
     println("Excitation: ", i)
 end
