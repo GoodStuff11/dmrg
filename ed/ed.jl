@@ -192,4 +192,12 @@ function main()
     end
 end
 
+function main2()
+    mmax = 4
+    Nsites = 6
+    for g in 1:30
+
+    end
+end
+
 # main()

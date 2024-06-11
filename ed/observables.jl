@@ -111,24 +111,14 @@ function parity_projection_m(state; Nsites, mmax, parity="even")
     return projected_state
 end
 
-function inversion_projection_dvr(state; Nsites, mmax, parity="even", direction="updown")
-    # LR: phi -> pi - phi
+function inversion_projection_dvr(state; Nsites, mmax, parity="even")
     # updown: phi -> -phi
 
     dim = Int(2*mmax + 1)
     projected_state = zero(state)
 
     for index in 0:length(state)-1
-        if direction == "updown"
-            inverted_index = sum([((dim - (index÷dim^k)%dim)%dim)*dim^k for k in 0:Nsites-1])
-        else
-            if dim%2 != 0
-                throw(ArgumentError(string("2*mmax + 1 must be even for left-right symmetry. 2*mmax+1=", dim)))
-            end
-            half_dim = dim ÷ 2
-            inverted_index = sum([(half_dim - (index÷dim^k)%dim + dim*((index÷dim^k)%dim > half_dim))*dim^k for k in 0:Nsites-1])
-        end
-        
+        inverted_index = sum([((dim - (index÷dim^k)%dim)%dim)*dim^k for k in 0:Nsites-1])
         projection_helper(state, projected_state, index, inverted_index, parity)
     end
 
