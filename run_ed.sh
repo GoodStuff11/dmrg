@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --account=def-pnroy 
+#SBATCH --account=rrg-pnroy 
 #SBATCH --mem=32G
 #SBATCH --time=2-00:00
 
