@@ -5,12 +5,12 @@ m: 5 # equals N for DVR
 #Number of sites#
 Nsites: 100
 Nbond: 50
-Nsweep: 50
+Nsweep: 10
 ecutoff: 1e-11
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 0.5
+gstart: 2.1
 dg: 0.1
 Ng: 1
 mbond: 5
