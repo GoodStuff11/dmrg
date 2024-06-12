@@ -9,5 +9,6 @@ cd dmrg
 if [ $# -eq 0 ] ; then
     julia --project=.. ./dmrg_run.jl  
 else
-    julia --project=.. ./dmrg_run.jl gstart $1
+    julia --project=.. ./dmrg_run.jl gstart $1 ParitySymmetry even
+    julia --project=.. ./dmrg_run.jl gstart $1 ParitySymmetry odd
 fi

@@ -1,5 +1,5 @@
 #Basis size#
-filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d.jld"
+filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
 m: 5 # equals N for DVR
 
 #Number of sites#
@@ -26,8 +26,8 @@ angle: 90.0 #in degrees
 strength: 0.0
 
 #Excited states#
-Nstates: 20
+Nstates: 15
 
 #symmetry
 ParitySymmetry: 'even' #'even', 'odd', 'none'
-InversionSymmetry: 'even' #'even', 'odd', 'none'
+InversionSymmetry: 'none' #'even', 'odd', 'none'

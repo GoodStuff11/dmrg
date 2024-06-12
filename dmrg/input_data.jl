@@ -37,7 +37,7 @@ function get_input_data(data_file::String="input_quick.yml"; default_filename::S
     Estrength = data["strength"]
     Nstates = data["Nstates"]
     output_filename = get!(data, "filename", default_filename)
-    parity_symmetry = get!(data, "ParitySymmetry", "true")
+    parity_symmetry = get!(data, "ParitySymmetry", "even")
     inversion_symmetry = get!(data,"InversionSymmetry",  "none")
 
     return mmax, Nsites, Nbonds, Nsweep, e_cutoff, SVD_error, gstart, delta_g, Ng,

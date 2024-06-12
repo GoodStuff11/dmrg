@@ -104,23 +104,31 @@ g = gstart
 H = create_Hamiltonian(g, sites, Nsecond)
 energy_eigenstates = MPS[]
 
-# finding excited state with DMRG
-for i in 1:Nstates
-    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=30)
-    push!(energy_eigenstates, ψ)
-    println("Excitation: ", i)
-end
 
-# using Printf
-println(format(Format(output_filename), g, Nsites))
+println(format(Format(output_filename), g, Nsites, parity_symmetry_type))
 f = h5open(format(Format(output_filename), g, Nsites),"w")
-for i in 1:Nstates
-    write(f, string("energy_eigenstates/", i), energy_eigenstates[i])
-end
 write(f,"N", Nsites)
 write(f,"mmax", mmax)
 write(f, "bond_dim", get_maxdims(sweeps))
 close(f)
+
+# finding excited state with DMRG
+for i in 1:Nstates
+    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=30)
+    push!(energy_eigenstates, ψ)
+	println("Excitation: ", i)
+
+	f = h5open(format(Format(output_filename), g, Nsites),"w")
+	write(f, string("energy_eigenstates/", i), energy_eigenstates[i])
+	close(f)
+end
+
+# using Printf
+
+# for i in 1:Nstates
+#     write(f, string("energy_eigenstates/", i), energy_eigenstates[i])
+# end
+
 # save(@sprintf("../output_data/DMRG_runs/DMRG_g=%0.2f.jld", g),"energy_eigenstates", energy_eigenstates,
 #     "N", Nsites,"mmax", mmax, "bond_dim", get_maxdims(sweeps))
 
