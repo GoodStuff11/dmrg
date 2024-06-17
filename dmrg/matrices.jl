@@ -88,4 +88,15 @@ function SmallEnergyProjector(mmax; m=1)
 	return Diagonal(diagonal)
 end
 
+function ReflectionOperator(mmax)
+	dim = (2*mmax+1)
+	arr = zeros(dim,dim,dim,dim)
+	for i = 1:dim
+		for j = 1:dim
+			arr[i,j,j,i] = 1
+		end
+	end
+	return reshape(arr, dim*dim,dim*dim)
+end
+
 #end 
