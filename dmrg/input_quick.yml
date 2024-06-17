@@ -1,5 +1,5 @@
 #Basis size#
-filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
+filename: "../output_data/DMRG_runs2/DMRG_g=%0.2f_N=%d_parity=%s.jld"
 m: 5 # equals N for DVR
 
 #Number of sites#
