@@ -3,7 +3,7 @@ filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
 m: 5 # equals N for DVR
 
 #Number of sites#
-Nsites: 100
+Nsites: 3
 Nbond: 50
 Nsweep: 10
 ecutoff: 1e-11

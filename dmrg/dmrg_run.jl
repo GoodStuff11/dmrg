@@ -2,6 +2,7 @@ using ITensors
 # using ITensorNetworks
 using Observers
 using Printf: Format, format
+using Printf
 using TupleTools
 using JLD
 using YAML
@@ -110,8 +111,11 @@ println(filename)
 h5open(filename, "w") do file
 	write(file,"N", Nsites)
 	write(file,"mmax", mmax)
+	write(file,"g", g)
 	write(file, "bond_dim", get_maxdims(sweeps))
+	write(file, "parity", parity_symmetry_type)
 end
+
 
 # finding excited state with DMRG
 for i in 1:Nstates
@@ -132,5 +136,4 @@ end
 
 # save(@sprintf("../output_data/DMRG_runs/DMRG_g=%0.2f.jld", g),"energy_eigenstates", energy_eigenstates,
 #     "N", Nsites,"mmax", mmax, "bond_dim", get_maxdims(sweeps))
-
 
