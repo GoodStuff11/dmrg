@@ -21,7 +21,7 @@ function get_input_data(data_file::String="input_quick.yml"; default_filename::S
         end
     end
 
-    mmax = data["m"]
+    Nspec = data["Nspec"]
     Nsites = data["Nsites"]
     Nbonds = data["Nbond"]
     Nsweep = data["Nsweep"]
@@ -40,7 +40,7 @@ function get_input_data(data_file::String="input_quick.yml"; default_filename::S
     parity_symmetry = get!(data, "ParitySymmetry", "even")
     inversion_symmetry = get!(data,"InversionSymmetry",  "none")
 
-    return mmax, Nsites, Nbonds, Nsweep, e_cutoff, SVD_error, gstart, delta_g, Ng,
+    return Nspec, Nsites, Nbonds, Nsweep, e_cutoff, SVD_error, gstart, delta_g, Ng,
            mbond, pairs, evod, angle, Estrength, Nstates, output_filename, parity_symmetry,
            inversion_symmetry
 end

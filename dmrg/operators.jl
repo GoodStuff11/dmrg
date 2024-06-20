@@ -16,17 +16,28 @@ end
 =#
 
 
-function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, fac1=1, fac2=1, evod="m")
+function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 	Nsites = length(sites)
 
 	Nsecond = zeros(Int64,(Nsites-1))
+
 	for i=1:Nsites-1
 		if pairs == "nearest"
 			Nsecond[i]=i+1
 		elseif pairs == "allpairs"
 			Nsecond[i]=Nsites
-		end
+        else
+            throw(string("Pairs is: ", pairs))
+        end
 	end
+
+    if evod == "dvr"
+        fac1 = 1.0
+        fac2 = 1.0
+    else 
+        fac1 = -1.0
+        fac2 = 1.0im
+    end
 
 	ampo = AutoMPO()
 	for i=1:Nsites-1
@@ -63,17 +74,17 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, fac1=1, fac2=1
 		ampo += -cos(angle)*Estrength,"X",Nsites
 		ampo += -sin(angle)*Estrength*fac2,"Y",Nsites
 	end
-
 	H = MPO(ampo,sites)
 	return H
 end
 
 function label_states_by_parity(dim::Int)
+    is_even = (dim+1)%2
     even = []
     odd = []
     k=0
     mmax=div(dim,2)
-    for m=-mmax:mmax
+    for m=-mmax+is_even:mmax
         k+=1
         if mod(abs(m),2) == 0
             append!(even,k)
@@ -99,19 +110,19 @@ function ITensors.space(
         conserve_parity=true
         conserve_l=true
     end
+
+    mmax=div(dim,2)
+    is_even = (dim+1)%2
     if conserve_parity || conserve_L
-        mmax=div(dim,2)
-        
         #evenstates,oddstates=symmetry(dim)
         #this requires reordering of states in the definitions
-        [QN(qnname_parity,0,2)=>length(filter(iseven,-mmax:mmax)),QN(qnname_parity,1,2)=>length(filter(isodd,-mmax:mmax))]
+        [QN(qnname_parity,0,2)=>length(filter(iseven,-mmax + is_even:mmax)),QN(qnname_parity,1,2)=>length(filter(isodd,-mmax+is_even:mmax))]
         #this does not but leads to fragmented blocks
         #return [QN(qnname_parity,Int(isodd(i)),2)=>1 for i in -mmax:mmax]
     elseif conserve_parity && conserve_L
-        mmax=div(dim,2)
-        [QN((qnname_parity,isodd(m),2),(qnname_totalL,m,1))=>1 for m in -mmax:mmax]
+        [QN((qnname_parity,isodd(m),2),(qnname_totalL,m,1))=>1 for m in -mmax + is_even:mmax]
     elseif conserve_L
-        [QN(qnname_totalL,m,1)=>1 for m in -mmax:mmax]
+        [QN(qnname_totalL,m,1)=>1 for m in -mmax + is_even:mmax]
     else
         return dim
     end

@@ -35,14 +35,14 @@ return matrix_new
 end
 =#
 function parity_symmetry(matrix)
-	Nspec,_=size(matrix)
-	mmax=div(Nspec,2)
-	state_to_ind(i)=i+mmax+1
-	evens=state_to_ind.(filter(iseven,-mmax:mmax)) 
-	odds=state_to_ind.(filter(isodd,-mmax:mmax))
-	order=[evens...,odds...]
-	matrix_new = zeros(Nspec,Nspec)
-	return matrix[order,order]
+	Nspec, _ = size(matrix)
+	is_even = (Nspec+1)%2
+	mmax = div(Nspec,2)
+	state_to_ind(i) = i + mmax + (1-is_even)
+	evens = state_to_ind.(filter(iseven, -mmax + is_even:mmax)) 
+	odds = state_to_ind.(filter(isodd, -mmax + is_even:mmax))
+	order = [evens..., odds...]
+	return matrix[order, order]
 end
 
 function trivial_symmetry(matrix)
