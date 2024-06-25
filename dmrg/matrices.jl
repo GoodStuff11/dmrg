@@ -1,7 +1,6 @@
 #module matrices
 
 using LinearAlgebra
-using SparseArrays
 
 #export kinetic,Xoperator,Yoperator,Upoperator,Downoperator,PNoperator,m
 #################################################################
@@ -68,11 +67,43 @@ function Downoperator(dim)
 	return matrix
 end
 function MInversionOperator(dim)
+	@assert dim % 2 == 1
 	# this symmetry doesn't work for even dim
+	# works 
 	return rotl90(Diagonal(ones(dim)))
 end
 
+function MParityOperator(dim)
+	@assert dim % 2 == 1
+	mmax = dim ÷ 2
+	arr = zeros(dim,dim)
+	for i = 1:dim
+		arr[i, i] = (-1)^((i-mmax)%2)
+	end
+	return arr
+end
+
+function phiReflectionOperator(dim)
+	# phi -> -phi
+	arr = zeros(dim,dim)
+	arr[end,end] = 1
+	arr[1:end-1,1:end-1] = rotl90(Diagonal(ones(dim-1)))
+	return arr
+end
+
+
+
+function phiRotationOperator(dim)
+	@assert dim % 2 == 0
+	arr = zeros(dim,dim)
+	for i = 1:dim
+		arr[i, (i+dim÷2-1)%dim+1] = 1
+	end
+	return arr
+end
+
 function SmallEnergyProjector(dim; m=1)
+	# only for m basis
 	mmax = dim÷2
 	diagonal = zeros(dim)
 	diagonal[(mmax-m+(dim%2)):(mmax+m+(dim%2))] .= 1
@@ -86,7 +117,7 @@ function ReflectionOperator(dim)
 			arr[i,j,j,i] = 1
 		end
 	end
-	return sparse(reshape(arr, dim*dim,dim*dim))
+	return reshape(arr, dim*dim,dim*dim)
 end
 
 #end 

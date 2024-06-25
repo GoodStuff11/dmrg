@@ -31,14 +31,6 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
         end
 	end
 
-    if evod == "dvr"
-        fac1 = 1.0
-        fac2 = 1.0
-    else 
-        fac1 = -1.0
-        fac2 = 1.0im
-    end
-
 	ampo = AutoMPO()
 	for i=1:Nsites-1
 		ampo += 1.0,"T",i
@@ -46,7 +38,7 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 			c=g/((abs(j-i))^3)
 			if evod == "dvr"
 				# y_iy_j#
-				ampo += 1.0*c*fac1,"Y",i,"Y",j
+				ampo += 1.0*c,"Y",i,"Y",j
 				# 2*x_ix_j#
 				ampo += -2.0*c,"X",i,"X",j
 			else
@@ -58,6 +50,9 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 				ampo +=-.25*c,"Down",i,"Up",j
 				# down down
 				ampo +=-.75*c,"Down",i,"Down",j
+
+                # ampo += -1.0*c,"Y",i,"Y",j
+				# ampo += -2.0*c,"X",i,"X",j
 			end
 		end
 		#Electric field#

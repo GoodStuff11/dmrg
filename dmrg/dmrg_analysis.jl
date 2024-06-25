@@ -22,7 +22,7 @@ include("utility_funcs.jl")
 function apply_elementwise_projector(matrix, sites, state; parity="even")
     tmp = copy(state)
     for i in eachindex(sites)
-        tmp = apply(op(matrix,sites[i]),state)
+        tmp = apply(op(matrix,sites[i]),tmp)
     end
     if parity == "even"
         return inner(state, (tmp + state)/2)
@@ -31,13 +31,13 @@ function apply_elementwise_projector(matrix, sites, state; parity="even")
 end
 function apply_pairs_projector(matrix, sites, state; parity="even")
     tmp = copy(state)
-    for i in eachindex(sites)
-        tmp = apply(op(matrix,sites[i], sites[length(sites)+1-i]),state)
+    for i in 1:length(sites)÷2
+        tmp = apply(op(matrix,sites[i], sites[end+1-i]),tmp)
     end
     if parity == "even"
         return inner(state, (tmp + state)/2)
     end
-    return inner(state, (tmp - state)/2)
+    return inner(state, (state - tmp)/2)
 end
 
 function get_mps_list(path)
@@ -94,13 +94,6 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
     #Define basis#
     mInvert = symmetry(MInversionOperator(dim))
     refop = ReflectionOperator(dim)
-
-    use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
-    if use_parity_symmetry
-        symmetry=parity_symmetry
-    else
-        symmetry=trivial_symmetry
-    end
 
     # reading the mps to an array
     println("Getting MPS")
@@ -230,6 +223,6 @@ for filename in even_files
     end
 end
 println(curves)
-h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/mydata.h5", "w") do file
+h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/plot_data.jld", "w") do file
     write(file, "curves", curves)  # alternatively, say "@write file A"
 end
