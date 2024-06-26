@@ -11,7 +11,7 @@ function exp_dvr(dim)
 	Y = zeros((dim,dim))
 	
 	for ii=1:dim
-		phi[ii] = ii*2.0*pi/dim
+		phi[ii] = (ii-1)*2.0*pi/dim
 		X[ii,ii] = cos(phi[ii])	
 		Y[ii,ii] = sin(phi[ii])	
 	end

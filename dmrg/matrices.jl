@@ -86,11 +86,10 @@ end
 function phiReflectionOperator(dim)
 	# phi -> -phi
 	arr = zeros(dim,dim)
-	arr[end,end] = 1
-	arr[1:end-1,1:end-1] = rotl90(Diagonal(ones(dim-1)))
+	arr[1,1] = 1
+	arr[2:end,2:end] = rotl90(Diagonal(ones(dim-1)))
 	return arr
 end
-
 
 
 function phiRotationOperator(dim)
@@ -111,13 +110,13 @@ function SmallEnergyProjector(dim; m=1)
 end
 
 function ReflectionOperator(dim)
-	arr = zeros(dim,dim,dim,dim)
+	arr = zeros(dim*dim,dim*dim)
 	for i = 1:dim
 		for j = 1:dim
-			arr[i,j,j,i] = 1
+			arr[i*dim + j,j*dim+i] = 1
 		end
 	end
-	return reshape(arr, dim*dim,dim*dim)
+	return arr
 end
 
 #end 

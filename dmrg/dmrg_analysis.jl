@@ -73,26 +73,45 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
     Uptmp = Upoperator(dim)
     Downtmp = Downoperator(dim)
     
-    #Define basis#
+    #Define basis
     if evod == "dvr"
-        tmp1,tmp2,tmp3 = symmetry.(exp_dvr(dim))
-        global T = symmetry(tmp1)
-        global X = symmetry(tmp2)
-        global Y = symmetry(tmp3)
+        symmetry = trivial_symmetry
+        if use_inversion_symmetry && use_parity_symmetry
+            symmetry = dvr_symmetric_basis
+        elseif use_inversion_symmetry
+            symmetry = dvr_inversion_symmetry
+        elseif use_parity_symmetry
+            symmetry = dvr_rotation_symmetry
+        end
     
-        global Nspec=size(T,1)
-    else 
+        # define basis
+        tmp1,tmp2,tmp3 = symmetry.(exp_dvr(Nspec))
+        global T = tmp1
+        global X = tmp2
+        global Y = tmp3
+
+        invert = symmetry(phiReflectionOperator(dim))
+    end
+    if evod == "m"
+        if use_inversion_symmetry
+            symmetry = m_inversion_symmetry
+        else
+            symmetry = trivial_symmetry
+        end
+    
+        # define basis
         global T = symmetry(Ttmp)
         global X = symmetry(Xtmp)
         global Y = symmetry(Ytmp)
         global Up = symmetry(Uptmp)
         global Down = symmetry(Downtmp)
-    
-        global Nspec=size(T,1)
+
+        invert = symmetry(MInversionOperator(dim))
     end
+    
 
     #Define basis#
-    mInvert = symmetry(MInversionOperator(dim))
+    
     refop = ReflectionOperator(dim)
 
     # reading the mps to an array

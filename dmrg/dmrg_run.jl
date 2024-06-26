@@ -33,40 +33,48 @@ Xtmp = Xoperator(Nspec)
 Ytmp = Yoperator(Nspec)
 Uptmp = Upoperator(Nspec)
 Downtmp = Downoperator(Nspec)
-mInverttmp = MInversionOperator(Nspec)
-SmallEProjtmp = SmallEnergyProjector(Nspec; m=1)
 
-use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
-if use_parity_symmetry
-    symmetry=parity_symmetry
-else
-    symmetry=trivial_symmetry
-end
+use_inversion_symmetry = inversion_symmetry_type == "even" || inversion_symmetry_type == "odd"
+use_parity_symmetry = parity_symmetry_type == "even" || parity_symmetry_type == "odd"
 
-#Define basis#
 if evod == "dvr"
-	tmp1,tmp2,tmp3 = symmetry.(exp_dvr(Nspec))
-	global T = symmetry(tmp1)
-	global X = symmetry(tmp2)
-	global Y = symmetry(tmp3)
+	symmetry = trivial_symmetry
+	if use_inversion_symmetry && use_parity_symmetry
+		symmetry = dvr_symmetric_basis
+	elseif use_inversion_symmetry
+		symmetry = dvr_inversion_symmetry
+	elseif use_parity_symmetry
+		symmetry = dvr_rotation_symmetry
+	end
 
-	Nspec=size(T,1)
-else 
+	# define basis
+	tmp1,tmp2,tmp3 = symmetry.(exp_dvr(Nspec))
+	global T = tmp1
+	global X = tmp2
+	global Y = tmp3
+end
+if evod == "m"
+	if use_inversion_symmetry
+		symmetry = m_inversion_symmetry
+	else
+		symmetry = trivial_symmetry
+	end
+
+	# define basis
 	global T = symmetry(Ttmp)
 	global X = symmetry(Xtmp)
 	global Y = symmetry(Ytmp)
 	global Up = symmetry(Uptmp)
 	global Down = symmetry(Downtmp)
-	global mInvert = symmetry(mInverttmp)
-	global SmallEProj = symmetry(SmallEProjtmp)
-
-	Nspec=size(T,1)
 end
+
+
+Nspec=size(T,1)
 
 include("operators.jl")
 include("observer.jl")
 
-sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_L=false)
+sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
 
 Random.seed!(1234)
 if parity_symmetry_type == "even"

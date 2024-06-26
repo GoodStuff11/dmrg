@@ -15,7 +15,6 @@
 end
 =#
 
-
 function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 	Nsites = length(sites)
 
@@ -92,34 +91,55 @@ end
 
 function ITensors.space(
     ::SiteType"PlaRotor";
-    dim=3,
-    conserve_qns=false,
+    dim,
+    basis="m",
     conserve_parity=false,
-    conserve_L=false,
-    qnname_parity="Parity",
-    qnname_totalL ="L"
+    conserve_inversion_symmetry=false,
     )
-    ##currently only parity supported
-    ##
-    if conserve_qns
-        conserve_parity=true
-        conserve_l=true
+    mmax = dim ÷ 2
+    is_odd = dim%2
+    is_even = 1 - is_odd
+
+    # no conserved quantities
+    if !conserve_parity && !conserve_inversion_symmetry
+        return dim
     end
 
-    mmax=div(dim,2)
-    is_even = (dim+1)%2
-    if conserve_parity || conserve_L
-        #evenstates,oddstates=symmetry(dim)
-        #this requires reordering of states in the definitions
-        [QN(qnname_parity,0,2)=>length(filter(iseven,-mmax + is_even:mmax)),QN(qnname_parity,1,2)=>length(filter(isodd,-mmax+is_even:mmax))]
-        #this does not but leads to fragmented blocks
-        #return [QN(qnname_parity,Int(isodd(i)),2)=>1 for i in -mmax:mmax]
-    elseif conserve_parity && conserve_L
-        [QN((qnname_parity,isodd(m),2),(qnname_totalL,m,1))=>1 for m in -mmax + is_even:mmax]
-    elseif conserve_L
-        [QN(qnname_totalL,m,1)=>1 for m in -mmax + is_even:mmax]
+    if basis == "m"
+        if conserve_inversion_symmetry && conserve_parity
+            @assert is_odd == 1
+            quantum_numbers = Pair{QN, Int64}[]
+            for m = -mmax:mmax
+                push!(quantum_numbers, QN(("parity", m%2,2), ("inv_sym", Int(m>0), 2))=>1)
+            end
+            return quantum_numbers
+        elseif conserve_inversion_symmetry
+            @assert is_odd == 1
+            return [QN("inv_sym",0,2)=>mmax+1, QN("inv_sym",1,2)=>mmax]
+        else
+            quantum_numbers = Pair{QN, Int64}[]
+            for m = -mmax+is_even:mmax
+                push!(quantum_numbers, QN("parity", m%2, 2)=>1)
+            end
+            return quantum_numbers
+        end
+    elseif basis == "dvr"
+        if conserve_inversion_symmetry && conserve_parity
+            @assert is_even == 1
+            return [
+                QN(("parity",0,2), ("inv_sym",0,2))=>1 + mmax÷2, 
+                QN(("parity",0,2), ("inv_sym",1,2))=>(mmax-1)÷2, 
+                QN(("parity",1,2), ("inv_sym",0,2))=>(mmax+1)÷2, 
+                QN(("parity",1,2), ("inv_sym",1,2))=>mmax÷2, 
+            ]
+        elseif conserve_inversion_symmetry
+            return [QN("inv_sym",0,2)=>mmax+1, QN("inv_sym",1,2)=>mmax-is_even]
+        else
+            @assert is_even == 1
+            return [QN("parity",0,2)=>mmax, QN("parity",1,2)=>mmax]
+        end
     else
-        return dim
+        throw("Invalid basis: $basis. Must be m or dvr")
     end
 end
 
