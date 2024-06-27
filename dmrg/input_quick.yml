@@ -5,7 +5,7 @@ m: 5 # equals N for DVR
 #Number of sites#
 Nsites: 3
 Nbond: 50
-Nsweep: 100
+Nsweep: 20
 ecutoff: 1e-11
 SVD: 1e-8
 
@@ -26,7 +26,7 @@ angle: 90.0 #in degrees
 strength: 0.0
 
 #Excited states#
-Nstates: 15
+Nstates: 1
 
 #symmetry
 ParitySymmetry: 'even' #'even', 'odd', 'none'

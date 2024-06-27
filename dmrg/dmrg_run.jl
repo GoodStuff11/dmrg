@@ -106,15 +106,15 @@ H = create_Hamiltonian(g, sites, Nsecond)
 energy_eigenstates = MPS[]
 
 
-filename = format(Format(output_filename), g, Nsites, parity_symmetry_type)
-println(filename)
-h5open(filename, "w") do file
-	write(file,"N", Nsites)
-	write(file,"mmax", mmax)
-	write(file,"g", g)
-	write(file, "bond_dim", get_maxdims(sweeps))
-	write(file, "parity", parity_symmetry_type)
-end
+# filename = format(Format(output_filename), g, Nsites, parity_symmetry_type)
+# println(filename)
+# h5open(filename, "w") do file
+# 	write(file,"N", Nsites)
+# 	write(file,"mmax", mmax)
+# 	write(file,"g", g)
+# 	write(file, "bond_dim", get_maxdims(sweeps))
+# 	write(file, "parity", parity_symmetry_type)
+# end
 
 
 # finding excited state with DMRG
@@ -123,9 +123,9 @@ for i in 1:Nstates
     push!(energy_eigenstates, ψ)
 	println("Excitation: ", i)
 
-	h5open(filename, "r+") do file
-		write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
-	end
+	# h5open(filename, "r+") do file
+	# 	write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
+	# end
 end
 
 # using Printf
