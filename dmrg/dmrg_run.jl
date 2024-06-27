@@ -18,7 +18,7 @@ include("dvr.jl")
 include("utility_funcs.jl")
 
 
-mmax, Nsites, Nbonds, Nsweep, e_cutoff, 
+Nspec, Nsites, Nbonds, Nsweep, e_cutoff, 
 		SVD_error, gstart, delta_g, Ng,
         mbond, pairs, evod, angle, Estrength, 
 		Nstates, output_filename, parity_symmetry_type,
@@ -28,73 +28,56 @@ mmax, Nsites, Nbonds, Nsweep, e_cutoff,
 ###ToDo: we might want to parse the name for that file from input
 
 #Calculate kinetic matrix and x operator#
-Ttmp = kinetic(mmax)
-Xtmp = Xoperator(mmax)
-Ytmp = Yoperator(mmax)
-Uptmp = Upoperator(mmax)
-Downtmp = Downoperator(mmax)
-mInverttmp = MInversionOperator(mmax)
-SmallEProjtmp = SmallEnergyProjector(mmax; m=1)
+Ttmp = kinetic(Nspec)
+Xtmp = Xoperator(Nspec)
+Ytmp = Yoperator(Nspec)
+Uptmp = Upoperator(Nspec)
+Downtmp = Downoperator(Nspec)
 
-use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
-if use_parity_symmetry
-    symmetry=parity_symmetry
-else
-    symmetry=trivial_symmetry
-end
+use_inversion_symmetry = inversion_symmetry_type == "even" || inversion_symmetry_type == "odd"
+use_parity_symmetry = parity_symmetry_type == "even" || parity_symmetry_type == "odd"
 
-#Define basis#
 if evod == "dvr"
-	tmp1,tmp2,tmp3 = symmetry.(exp_dvr(mmax))
-	global T = symmetry(tmp1)
-	global X = symmetry(tmp2)
-	global Y = symmetry(tmp3)
+	symmetry = trivial_symmetry
+	if use_inversion_symmetry && use_parity_symmetry
+		symmetry = dvr_symmetric_basis
+	elseif use_inversion_symmetry
+		symmetry = dvr_inversion_symmetry
+	elseif use_parity_symmetry
+		symmetry = dvr_rotation_symmetry
+	end
 
-	Nspec=size(T,1)
-else 
+	# define basis
+	tmp1,tmp2,tmp3 = symmetry.(exp_dvr(Nspec))
+	global T = tmp1
+	global X = tmp2
+	global Y = tmp3
+end
+if evod == "m"
+	if use_inversion_symmetry
+		symmetry = m_inversion_symmetry
+	else
+		symmetry = trivial_symmetry
+	end
+
+	# define basis
 	global T = symmetry(Ttmp)
 	global X = symmetry(Xtmp)
 	global Y = symmetry(Ytmp)
 	global Up = symmetry(Uptmp)
 	global Down = symmetry(Downtmp)
-	global mInvert = symmetry(mInverttmp)
-	global SmallEProj = symmetry(SmallEProjtmp)
-
-	Nspec=size(T,1)
 end
 
-#Determine number of interaction pairs per starting site#
-Nsecond = zeros(Int64,(Nsites-1))
-for i=1:Nsites-1
-	if pairs == "nearest"
-		Nsecond[i]=i+1
-	elseif pairs == "allpairs"
-		Nsecond[i]=Nsites
-	end
-end
+
+Nspec=size(T,1)
 
 include("operators.jl")
 include("observer.jl")
 
-if evod == "dvr"
-    fac1 = 1.0
-    fac2 = 1.0
-else 
-    fac1 = -1.0
-    fac2 = 1.0im
-end
-
-sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_L=false)
+sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
 
 Random.seed!(1234)
-if parity_symmetry_type == "even"
-	psi = randomMPS(sites,[1 for i in 1:Nsites]; linkdims=50)
-elseif parity_symmetry_type == "odd"
-	psi = randomMPS(sites,[[1 for i in 1:Nsites-1]..., 2*mmax]; linkdims=50)
-else
-	psi = randomMPS(sites; linkdims=50)
-end
-# psi = MPS(sites, [1 for i in 1:Nsites])
+psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
 
 
 sweeps = Sweeps(Nsweep)
@@ -102,19 +85,20 @@ maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30
 setcutoff!(sweeps, e_cutoff)
 
 g = gstart
-H = create_Hamiltonian(g, sites, Nsecond)
+H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
 energy_eigenstates = MPS[]
 
 
-# filename = format(Format(output_filename), g, Nsites, parity_symmetry_type)
-# println(filename)
-# h5open(filename, "w") do file
-# 	write(file,"N", Nsites)
-# 	write(file,"mmax", mmax)
-# 	write(file,"g", g)
-# 	write(file, "bond_dim", get_maxdims(sweeps))
-# 	write(file, "parity", parity_symmetry_type)
-# end
+filename = format(Format(output_filename), g, Nsites, parity_symmetry_type)
+println(filename)
+h5open(filename, "w") do file
+	write(file,"N", Nsites)
+	write(file,"Nspec", Nspec)
+	write(file,"g", g)
+	write(file, "bond_dim", get_maxdims(sweeps))
+	write(file, "parity", parity_symmetry_type)
+	write(file, "basis", evod)
+end
 
 
 # finding excited state with DMRG

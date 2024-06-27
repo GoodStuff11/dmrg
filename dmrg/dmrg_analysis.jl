@@ -22,7 +22,7 @@ include("utility_funcs.jl")
 function apply_elementwise_projector(matrix, sites, state; parity="even")
     tmp = copy(state)
     for i in eachindex(sites)
-        tmp = apply(op(matrix,sites[i]),state)
+        tmp = apply(op(matrix,sites[i]),tmp)
     end
     if parity == "even"
         return inner(state, (tmp + state)/2)
@@ -31,13 +31,13 @@ function apply_elementwise_projector(matrix, sites, state; parity="even")
 end
 function apply_pairs_projector(matrix, sites, state; parity="even")
     tmp = copy(state)
-    for i in eachindex(sites)
-        tmp = apply(op(matrix,sites[i], sites[length(sites)+1-i]),state)
+    for i in 1:length(sites)÷2
+        tmp = apply(op(matrix,sites[i], sites[end+1-i]),tmp)
     end
     if parity == "even"
         return inner(state, (tmp + state)/2)
     end
-    return inner(state, (tmp - state)/2)
+    return inner(state, (state - tmp)/2)
 end
 
 function get_mps_list(path)
@@ -57,7 +57,7 @@ function get_mps_list(path)
 end
 
 
-function compute_states(path, filename, past_mps_list, past_vectors; parity_symmetry_type="even", mmax=5)
+function compute_states(path, filename, past_mps_list, past_vectors; parity_symmetry_type="even", dim=11, evod="m")
     path = joinpath(path, filename)
     
     use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
@@ -67,41 +67,52 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
         symmetry=trivial_symmetry
     end
 
-    Ttmp = kinetic(mmax)
-    Xtmp = Xoperator(mmax)
-    Ytmp = Yoperator(mmax)
-    Uptmp = Upoperator(mmax)
-    Downtmp = Downoperator(mmax)
+    Ttmp = kinetic(dim)
+    Xtmp = Xoperator(dim)
+    Ytmp = Yoperator(dim)
+    Uptmp = Upoperator(dim)
+    Downtmp = Downoperator(dim)
     
-    evod = "m"
-    #Define basis#
+    #Define basis
     if evod == "dvr"
-        tmp1,tmp2,tmp3 = symmetry.(exp_dvr(mmax))
-        global T = symmetry(tmp1)
-        global X = symmetry(tmp2)
-        global Y = symmetry(tmp3)
+        symmetry = trivial_symmetry
+        if use_inversion_symmetry && use_parity_symmetry
+            symmetry = dvr_symmetric_basis
+        elseif use_inversion_symmetry
+            symmetry = dvr_inversion_symmetry
+        elseif use_parity_symmetry
+            symmetry = dvr_rotation_symmetry
+        end
     
-        global Nspec=size(T,1)
-    else 
+        # define basis
+        tmp1,tmp2,tmp3 = symmetry.(exp_dvr(Nspec))
+        global T = tmp1
+        global X = tmp2
+        global Y = tmp3
+
+        invert = symmetry(phiReflectionOperator(dim))
+    end
+    if evod == "m"
+        if use_inversion_symmetry
+            symmetry = m_inversion_symmetry
+        else
+            symmetry = trivial_symmetry
+        end
+    
+        # define basis
         global T = symmetry(Ttmp)
         global X = symmetry(Xtmp)
         global Y = symmetry(Ytmp)
         global Up = symmetry(Uptmp)
         global Down = symmetry(Downtmp)
-    
-        global Nspec=size(T,1)
+
+        invert = symmetry(MInversionOperator(dim))
     end
+    
 
     #Define basis#
-    mInvert = symmetry(MInversionOperator(mmax))
-    refop = ReflectionOperator(mmax)
-
-    use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
-    if use_parity_symmetry
-        symmetry=parity_symmetry
-    else
-        symmetry=trivial_symmetry
-    end
+    
+    refop = ReflectionOperator(dim)
 
     # reading the mps to an array
     println("Getting MPS")
@@ -115,7 +126,7 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
 
     g = parse(Float64, split(filename, "_")[2][3:end])
     sites = siteinds(mps_list[1])
-    H = create_Hamiltonian(g, sites, pairs)
+    H = create_Hamiltonian(g, sites, "nearest")
 
     Hij = zeros((length(mps_list), length(mps_list)))
     Sij = zeros((length(mps_list), length(mps_list))) # we want H x = lambda S x
@@ -130,6 +141,7 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
     println("Computing eigenvalues")
     F = eigen(Hij, Sij)
     energy_levels = F.values
+    eigen_vectors = F.vectors ./ sqrt.(diag(F.vectors' * F.vectors)') # normalize
 
     println("Computing overlap")
     overlap = nothing
@@ -140,14 +152,15 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
                 overlap[i,j] = inner(mps1, mps2)
             end
         end
-        overlap = F.vectors' * overlap * past_vectors # adjustment may not be necessary depending on DMRG accuracy
+
+        overlap = eigen_vectors' * overlap * past_vectors # adjustment may not be necessary depending on DMRG accuracy
     end
 
     println("Computing parity")
     even_m_parity = [apply_elementwise_projector(mInvert, sites, mps; parity="even") for mps in mps_list]
     # even_reflection_parity = [apply_pairs_projector(refop, sites, mps) for mps in mps_list] # too computationally extensive
 
-    return g, mps_list, overlap, energy_levels, even_m_parity, F.vectors
+    return g, mps_list, overlap, energy_levels, even_m_parity, eigen_vectors
 end
 
 
@@ -158,18 +171,18 @@ even_files = sort(filter(x->occursin("even", x), files),by=x->parse(Float64, spl
 odd_files = sort(filter(x->occursin("odd", x), files), by=x->parse(Float64, split(x, "_")[2][3:end]))
 
 
-mmax = nothing
+Nspec = nothing
 Nsites = nothing
+evod = nothing
 h5open(joinpath(path, even_files[1]), "r") do f1
     # write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
     global Nsites = read(f1, "N")
-    global mmax = read(f1, "mmax")
+    global Nspec = read(f1, "Nspec")
+    global evod = read(f1, "basis")
 end
 
 include("operators.jl")
 include("observer.jl")
-
-
 
 
 # println(even_files)
@@ -183,7 +196,7 @@ println(path)
 for filename in even_files
     println(filename)
     g, _past_mps_list, overlap, energy_levels, even_m_parity, _past_vectors = compute_states(path, filename, _past_mps_list, _past_vectors; parity_symmetry_type="even", mmax=mmax)
-    h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/data_%s.h5", filename), "w") do file
+    h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data_%s.h5", filename), "w") do file
         if !isnothing(overlap)
             write(file, "overlap", overlap)
         end
@@ -191,6 +204,7 @@ for filename in even_files
         write(file, "even_m_parity", even_m_parity)  
         write(file, "past_vectors", _past_vectors)  
     end
+    
     global _past_mps_list, _past_vectors = _past_mps_list, _past_vectors
     # adjusting curves based on overlap
     if isnothing(overlap)
@@ -198,6 +212,8 @@ for filename in even_files
             curves[i] = [[g], [energy], [parity]]
         end
     else
+        overlap = abs.(overlap).^2
+        # show(IOContext(stdout, :limit=>false), MIME"text/plain"(), overlap)
         new_size, old_size = size(overlap)
         used_indices = Set()
         mapping = Dict()
@@ -211,7 +227,7 @@ for filename in even_files
                 global num_completed_curves += 1
             end
         end
-        global curves = Dict(mapping[key]=>val for (key, val) in curves)
+        global curves = Dict(get!(mapping, key, key)=>val for (key, val) in curves)
         for (i, (energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
             if !(i in used_indices)
                 curves[i] = [[g], [energy], [parity]]
@@ -224,6 +240,7 @@ for filename in even_files
 
     end
 end
-h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/mydata.h5", "w") do file
+println(curves)
+h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/plot_data.jld", "w") do file
     write(file, "curves", curves)  # alternatively, say "@write file A"
 end

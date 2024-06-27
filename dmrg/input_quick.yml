@@ -1,16 +1,16 @@
 #Basis size#
-filename: "../output_data/DMRG_runs2/DMRG_g=%0.2f_N=%d_parity=%s.jld"
-m: 5 # equals N for DVR
+filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
+Nspec: 11 # Nspec div 2 = mmax
 
 #Number of sites#
 Nsites: 3
 Nbond: 50
-Nsweep: 20
+Nsweep: 50
 ecutoff: 1e-11
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 2.1
+gstart: 5
 dg: 0.1
 Ng: 1
 mbond: 5
@@ -19,7 +19,7 @@ mbond: 5
 pairs: nearest #nearest,allpairs
 
 #Basis states#
-states: all #all,even,odd,dvr
+states: m # m or dvr
 
 #External electric field#
 angle: 90.0 #in degrees

@@ -15,17 +15,19 @@
 end
 =#
 
-
-function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, fac1=1, fac2=1, evod="m")
+function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 	Nsites = length(sites)
 
 	Nsecond = zeros(Int64,(Nsites-1))
+
 	for i=1:Nsites-1
 		if pairs == "nearest"
 			Nsecond[i]=i+1
 		elseif pairs == "allpairs"
 			Nsecond[i]=Nsites
-		end
+        else
+            throw(string("Pairs is: ", pairs))
+        end
 	end
 
 	ampo = AutoMPO()
@@ -35,18 +37,21 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, fac1=1, fac2=1
 			c=g/((abs(j-i))^3)
 			if evod == "dvr"
 				# y_iy_j#
-				ampo += 1.0*c*fac1,"Y",i,"Y",j
+				ampo += 1.0*c,"Y",i,"Y",j
 				# 2*x_ix_j#
 				ampo += -2.0*c,"X",i,"X",j
 			else
 				# up up
-				ampo +=-.75*c,"Up",i,"Up",j
-				# up down
-				ampo +=-.25*c,"Up",i,"Down",j
-				# down up 
-				ampo +=-.25*c,"Down",i,"Up",j
-				# down down
-				ampo +=-.75*c,"Down",i,"Down",j
+				# ampo +=-.75*c,"Up",i,"Up",j
+				# # up down
+				# ampo +=-.25*c,"Up",i,"Down",j
+				# # down up 
+				# ampo +=-.25*c,"Down",i,"Up",j
+				# # down down
+				# ampo +=-.75*c,"Down",i,"Down",j
+
+                ampo += -1.0*c,"Y",i,"Y",j
+				ampo += -2.0*c,"X",i,"X",j
 			end
 		end
 		#Electric field#
@@ -63,17 +68,17 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, fac1=1, fac2=1
 		ampo += -cos(angle)*Estrength,"X",Nsites
 		ampo += -sin(angle)*Estrength*fac2,"Y",Nsites
 	end
-
 	H = MPO(ampo,sites)
 	return H
 end
 
 function label_states_by_parity(dim::Int)
+    is_even = (dim+1)%2
     even = []
     odd = []
     k=0
     mmax=div(dim,2)
-    for m=-mmax:mmax
+    for m=-mmax+is_even:mmax
         k+=1
         if mod(abs(m),2) == 0
             append!(even,k)
@@ -86,34 +91,53 @@ end
 
 function ITensors.space(
     ::SiteType"PlaRotor";
-    dim=3,
-    conserve_qns=false,
+    dim,
+    basis="m",
     conserve_parity=false,
-    conserve_L=false,
-    qnname_parity="Parity",
-    qnname_totalL ="L"
+    conserve_inversion_symmetry=false,
     )
-    ##currently only parity supported
-    ##
-    if conserve_qns
-        conserve_parity=true
-        conserve_l=true
-    end
-    if conserve_parity || conserve_L
-        mmax=div(dim,2)
-        
-        #evenstates,oddstates=symmetry(dim)
-        #this requires reordering of states in the definitions
-        [QN(qnname_parity,0,2)=>length(filter(iseven,-mmax:mmax)),QN(qnname_parity,1,2)=>length(filter(isodd,-mmax:mmax))]
-        #this does not but leads to fragmented blocks
-        #return [QN(qnname_parity,Int(isodd(i)),2)=>1 for i in -mmax:mmax]
-    elseif conserve_parity && conserve_L
-        mmax=div(dim,2)
-        [QN((qnname_parity,isodd(m),2),(qnname_totalL,m,1))=>1 for m in -mmax:mmax]
-    elseif conserve_L
-        [QN(qnname_totalL,m,1)=>1 for m in -mmax:mmax]
-    else
+    mmax = dim ÷ 2
+    is_odd = dim%2
+    is_even = 1 - is_odd
+
+    # no conserved quantities
+    if !conserve_parity && !conserve_inversion_symmetry
         return dim
+    end
+
+    if basis == "m"
+        if conserve_inversion_symmetry && conserve_parity
+            @assert is_odd == 1
+            return [
+                QN(("parity",0,2), ("inv_sym",0,2))=>mmax÷2 + 1, 
+                QN(("parity",0,2), ("inv_sym",1,2))=>mmax÷2, 
+                QN(("parity",1,2), ("inv_sym",0,2))=>(mmax+1)÷2, 
+                QN(("parity",1,2), ("inv_sym",1,2))=>(mmax+1)÷2, 
+            ]
+        elseif conserve_inversion_symmetry
+            @assert is_odd == 1
+            return [QN("inv_sym",0,2)=>mmax+1, QN("inv_sym",1,2)=>mmax]
+        else
+            odd_mmax = mmax%2
+            return [QN("parity",0,2)=>mmax+(1-odd_mmax), QN("parity",1,2)=>mmax+odd_mmax]
+        end
+    elseif basis == "dvr"
+        if conserve_inversion_symmetry && conserve_parity
+            @assert is_even == 1
+            return [
+                QN(("parity",0,2), ("inv_sym",0,2))=>1 + mmax÷2, 
+                QN(("parity",0,2), ("inv_sym",1,2))=>(mmax-1)÷2, 
+                QN(("parity",1,2), ("inv_sym",0,2))=>(mmax+1)÷2, 
+                QN(("parity",1,2), ("inv_sym",1,2))=>mmax÷2, 
+            ]
+        elseif conserve_inversion_symmetry
+            return [QN("inv_sym",0,2)=>mmax+1, QN("inv_sym",1,2)=>mmax-is_even]
+        else
+            @assert is_even == 1
+            return [QN("parity",0,2)=>mmax, QN("parity",1,2)=>mmax]
+        end
+    else
+        throw("Invalid basis: $basis. Must be m or dvr")
     end
 end
 

@@ -4,99 +4,119 @@ using LinearAlgebra
 
 #export kinetic,Xoperator,Yoperator,Upoperator,Downoperator,PNoperator,m
 #################################################################
-function kinetic(mmax)
-
-	matrix = zeros((2*mmax+1),(2*mmax+1))
+function kinetic(dim)
+	matrix = zeros(dim, dim)
 
 	k=0
-	for m=-mmax:mmax
+	for m=-(dim-1)÷2:dim÷2
 		k+=1
 		matrix[k,k] = m*m
 	end	
 
 	return matrix
 end
-function m(mmax)
-	matrix = zeros((2*mmax+1),(2*mmax+1))
+function m(dim)
+	matrix = zeros(dim, dim)
 	k=0
-	for m=-mmax:mmax
+	for m=-(dim-1)÷2:dim÷2
 		k+=1
 		matrix[k,k] = m
 	end	
 	return matrix
 end
 #################################################################
-function Xoperator(mmax)
+function Xoperator(dim)
 
-	diagonal = zeros((2*mmax+1))
-	subdiagonal = 0.5*ones((2*mmax))
+	diagonal = zeros(dim)
+	subdiagonal = 0.5*ones(dim - 1)
 
 	matrix=Tridiagonal(subdiagonal,diagonal,subdiagonal)
 
 	return matrix
 end
 #################################################################
-function Yoperator(mmax)
+function Yoperator(dim)
 
-	diagonal = zeros((2*mmax+1))
-	upper_subdiagonal = 0.5*ones((2*mmax))
-	lower_subdiagonal = -0.5*ones((2*mmax))
+	diagonal = zeros(dim)
+	upper_subdiagonal = 0.5*ones(dim-1)
 
-	matrix=Tridiagonal(lower_subdiagonal,diagonal,upper_subdiagonal)
+	matrix=Tridiagonal(-upper_subdiagonal,diagonal,upper_subdiagonal)
 
 	return matrix
 end
 #################################################################
-function Upoperator(mmax)
+function Upoperator(dim)
 
-	diagonal = zeros((2*mmax+1))
-	upper_subdiagonal = zeros((2*mmax))
-	subdiagonal = ones((2*mmax))
+	diagonal = zeros(dim)
+	upper_subdiagonal = zeros(dim-1)
+	subdiagonal = ones(dim-1)
 		
 	matrix=Tridiagonal(subdiagonal,diagonal,upper_subdiagonal)
 		
 	return matrix
 end
 #################################################################
-function Downoperator(mmax)
+function Downoperator(dim)
 
-	diagonal = zeros((2*mmax+1))
-	upper_subdiagonal = ones((2*mmax))
-	subdiagonal = zeros((2*mmax))
+	diagonal = zeros(dim)
+	upper_subdiagonal = ones(dim-1)
+	subdiagonal = zeros(dim-1)
 
 	matrix=Tridiagonal(subdiagonal,diagonal,upper_subdiagonal)
 		
 	return matrix
 end
-function MInversionOperator(mmax)
-	return rotl90(Diagonal(ones(2*mmax+1)))
+function MInversionOperator(dim)
+	@assert dim % 2 == 1
+	# this symmetry doesn't work for even dim
+	# works 
+	return rotl90(Diagonal(ones(dim)))
 end
-# #################################################################
-# function InversionProjector(mmax; symmetry="even")
-# 	diagonal = Diagonal(ones(2*mmax+1)./2)
-# 	if symmetry == "even"
-# 		return diagonal + rotl90(diagonal)
-# 	else
-# 		return diagonal - rotl90(diagonal)
-# 	end
-# end
 
-#################################################################
-function SmallEnergyProjector(mmax; m=1)
-	diagonal = zeros(2*mmax+1)
-	diagonal[(mmax-m+1):(mmax+m+1)] = ones(2*m+1)
+function MParityOperator(dim)
+	@assert dim % 2 == 1
+	mmax = dim ÷ 2
+	arr = zeros(dim,dim)
+	for i = 1:dim
+		arr[i, i] = (-1)^((i-mmax)%2)
+	end
+	return arr
+end
+
+function phiReflectionOperator(dim)
+	# phi -> -phi
+	arr = zeros(dim,dim)
+	arr[1,1] = 1
+	arr[2:end,2:end] = rotl90(Diagonal(ones(dim-1)))
+	return arr
+end
+
+
+function phiRotationOperator(dim)
+	@assert dim % 2 == 0
+	arr = zeros(dim,dim)
+	for i = 1:dim
+		arr[i, (i+dim÷2-1)%dim+1] = 1
+	end
+	return arr
+end
+
+function SmallEnergyProjector(dim; m=1)
+	# only for m basis
+	mmax = dim÷2
+	diagonal = zeros(dim)
+	diagonal[(mmax-m+(dim%2)):(mmax+m+(dim%2))] .= 1
 	return Diagonal(diagonal)
 end
 
-function ReflectionOperator(mmax)
-	dim = (2*mmax+1)
-	arr = zeros(dim,dim,dim,dim)
+function ReflectionOperator(dim)
+	arr = zeros(dim*dim,dim*dim)
 	for i = 1:dim
 		for j = 1:dim
-			arr[i,j,j,i] = 1
+			arr[i*dim + j,j*dim+i] = 1
 		end
 	end
-	return reshape(arr, dim*dim,dim*dim)
+	return arr
 end
 
 #end 

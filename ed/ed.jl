@@ -65,23 +65,36 @@ function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     end
     return final_state
 end
-function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs)
-    dim = Int(2*mmax + 1)
+function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs, dimension_parity="odd")
+    if dimension_parity == "odd"
+        dim = 2*mmax + 1
+    else
+        dim = 2*mmax
+    end
     final_state = zeros(ComplexF64, size(state))
     for i in 1:Nsites
-    #     # Ti
+        # Ti
         for k in 1:dim^Nsites # iterate over all states
             mk = ((k-1)%dim^i) ÷ dim^(i-1) # m value at atom from 0 to dim-1
             φi = mk/dim*2π
             
             # diagonal
-            final_state[k] += state[k]*((-cos(angle)*cos(φi) - sin(angle)*sin(φi)) * Estrength + mmax*(mmax+1)/3)
-            
+            final_state[k] += state[k]*(-cos(angle)*cos(φi) - sin(angle)*sin(φi)) * Estrength 
+            if dimension_parity == "odd"
+                final_state[k] += mmax*(mmax+1)/3*state[k]
+            else
+                final_state[k] += (2mmax^2 + 1)/6*state[k]
+            end
             for l in 0:dim-1
                 if l == mk
                     continue
                 end
-                final_state[k] += (-1)^(mk - l) * cos(π*(mk - l)/dim)/(2*sin(π*(mk - l)/dim)^2)*state[k + (l - mk)*dim^(i-1)]
+                if dimension_parity == "odd"
+                    final_state[k] += (-1)^(mk - l) * cos(π*(mk - l)/dim)/(2*sin(π*(mk - l)/dim)^2)*state[k + (l - mk)*dim^(i-1)]
+                else
+                    final_state[k] += (-1)^(mk - l)/(2*sin(π*(mk - l)/dim)^2)*state[k + (l - mk)*dim^(i-1)]
+                end
+                
             end
         end
         # Vij
