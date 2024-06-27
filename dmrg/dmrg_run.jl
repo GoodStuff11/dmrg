@@ -77,14 +77,7 @@ include("observer.jl")
 sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
 
 Random.seed!(1234)
-if parity_symmetry_type == "even"
-	psi = randomMPS(sites,[1 for i in 1:Nsites]; linkdims=50)
-elseif parity_symmetry_type == "odd"
-	psi = randomMPS(sites,[[1 for i in 1:Nsites-1]..., Nspec-1]; linkdims=50)
-else
-	psi = randomMPS(sites; linkdims=50)
-end
-# psi = MPS(sites, [1 for i in 1:Nsites])
+psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
 
 
 sweeps = Sweeps(Nsweep)
@@ -92,7 +85,7 @@ maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30
 setcutoff!(sweeps, e_cutoff)
 
 g = gstart
-H = create_Hamiltonian(g, sites, "nearest"; evod="dvr")
+H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
 energy_eigenstates = MPS[]
 
 

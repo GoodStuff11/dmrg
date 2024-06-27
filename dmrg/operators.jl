@@ -42,16 +42,16 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 				ampo += -2.0*c,"X",i,"X",j
 			else
 				# up up
-				ampo +=-.75*c,"Up",i,"Up",j
-				# up down
-				ampo +=-.25*c,"Up",i,"Down",j
-				# down up 
-				ampo +=-.25*c,"Down",i,"Up",j
-				# down down
-				ampo +=-.75*c,"Down",i,"Down",j
+				# ampo +=-.75*c,"Up",i,"Up",j
+				# # up down
+				# ampo +=-.25*c,"Up",i,"Down",j
+				# # down up 
+				# ampo +=-.25*c,"Down",i,"Up",j
+				# # down down
+				# ampo +=-.75*c,"Down",i,"Down",j
 
-                # ampo += -1.0*c,"Y",i,"Y",j
-				# ampo += -2.0*c,"X",i,"X",j
+                ampo += -1.0*c,"Y",i,"Y",j
+				ampo += -2.0*c,"X",i,"X",j
 			end
 		end
 		#Electric field#
@@ -108,20 +108,18 @@ function ITensors.space(
     if basis == "m"
         if conserve_inversion_symmetry && conserve_parity
             @assert is_odd == 1
-            quantum_numbers = Pair{QN, Int64}[]
-            for m = -mmax:mmax
-                push!(quantum_numbers, QN(("parity", m%2,2), ("inv_sym", Int(m>0), 2))=>1)
-            end
-            return quantum_numbers
+            return [
+                QN(("parity",0,2), ("inv_sym",0,2))=>mmax÷2 + 1, 
+                QN(("parity",0,2), ("inv_sym",1,2))=>mmax÷2, 
+                QN(("parity",1,2), ("inv_sym",0,2))=>(mmax+1)÷2, 
+                QN(("parity",1,2), ("inv_sym",1,2))=>(mmax+1)÷2, 
+            ]
         elseif conserve_inversion_symmetry
             @assert is_odd == 1
             return [QN("inv_sym",0,2)=>mmax+1, QN("inv_sym",1,2)=>mmax]
         else
-            quantum_numbers = Pair{QN, Int64}[]
-            for m = -mmax+is_even:mmax
-                push!(quantum_numbers, QN("parity", m%2, 2)=>1)
-            end
-            return quantum_numbers
+            odd_mmax = mmax%2
+            return [QN("parity",0,2)=>mmax+(1-odd_mmax), QN("parity",1,2)=>mmax+odd_mmax]
         end
     elseif basis == "dvr"
         if conserve_inversion_symmetry && conserve_parity
