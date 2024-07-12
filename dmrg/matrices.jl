@@ -110,13 +110,13 @@ function SmallEnergyProjector(dim; m=1)
 end
 
 function ReflectionOperator(dim)
-	arr = zeros(dim*dim,dim*dim)
+	arr = zeros(dim,dim,dim,dim)
 	for i = 1:dim
 		for j = 1:dim
-			arr[i*dim + j,j*dim+i] = 1
+			arr[i,j,j,i] = 1
 		end
 	end
-	return arr
+	return reshape(arr,dim*dim,dim*dim)
 end
 
 #end 

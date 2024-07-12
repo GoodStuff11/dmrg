@@ -56,16 +56,8 @@ function get_mps_list(path)
     return mps_list 
 end
 
-
-function compute_states(path, filename, past_mps_list, past_vectors; parity_symmetry_type="even", dim=11, evod="m")
+function compute_states(path, filename, past_mps_list, past_vectors; parity_symmetry_type="even",inversion_symmetry_type="even", dim=11, evod="m")
     path = joinpath(path, filename)
-    
-    use_parity_symmetry = (parity_symmetry_type == "even" || parity_symmetry_type == "odd")
-    if use_parity_symmetry
-        symmetry=parity_symmetry
-    else
-        symmetry=trivial_symmetry
-    end
 
     Ttmp = kinetic(dim)
     Xtmp = Xoperator(dim)
@@ -73,6 +65,9 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
     Uptmp = Upoperator(dim)
     Downtmp = Downoperator(dim)
     
+    use_inversion_symmetry = inversion_symmetry_type == "even" || inversion_symmetry_type == "odd"
+    use_parity_symmetry = parity_symmetry_type == "even" || parity_symmetry_type == "odd"
+
     #Define basis
     if evod == "dvr"
         symmetry = trivial_symmetry
@@ -90,13 +85,16 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
         global X = tmp2
         global Y = tmp3
 
-        invert = symmetry(phiReflectionOperator(dim))
+        mInvert = symmetry(phiReflectionOperator(dim))
     end
     if evod == "m"
-        if use_inversion_symmetry
+        symmetry = trivial_symmetry
+        if use_inversion_symmetry && use_parity_symmetry
+            symmetry = x -> parity_symmetry(m_inversion_symmetry(x))
+        elseif use_inversion_symmetry
             symmetry = m_inversion_symmetry
-        else
-            symmetry = trivial_symmetry
+        elseif use_parity_symmetry
+            symmetry = parity_symmetry
         end
     
         # define basis
@@ -106,13 +104,13 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
         global Up = symmetry(Uptmp)
         global Down = symmetry(Downtmp)
 
-        invert = symmetry(MInversionOperator(dim))
+        mInvert = symmetry(MInversionOperator(dim))
     end
     
 
     #Define basis#
     
-    refop = ReflectionOperator(dim)
+    # refop = ReflectionOperator(dim)
 
     # reading the mps to an array
     println("Getting MPS")
@@ -163,24 +161,46 @@ function compute_states(path, filename, past_mps_list, past_vectors; parity_symm
     return g, mps_list, overlap, energy_levels, even_m_parity, eigen_vectors
 end
 
-
-
-# path = raw"/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/DMRG_runs2/"
-path = raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\DMRG_runs"
-files = readdir(path)
-even_files = sort(filter(x->occursin("even", x), files),by=x->parse(Float64, split(x, "_")[2][3:end]))
-odd_files = sort(filter(x->occursin("odd", x), files), by=x->parse(Float64, split(x, "_")[2][3:end]))
-
-
-Nspec = nothing
-Nsites = nothing
-evod = nothing
-h5open(joinpath(path, even_files[1]), "r") do f1
-    # write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
-    global Nsites = read(f1, "N")
-    global Nspec = read(f1, "Nspec")
-    global evod = read(f1, "basis")
+function group_files_in_dir(path)
+    # groups all files in folder into their symmetries and sorts them by g value
+    # requires the naming convention 
+    # SOMETHING_g=#_N=#_parity=even_inversion=odd.jld 
+    files = readdir(path)
+    filename_groupings = Dict()
+    for file in files
+        parity_key = nothing
+        inversion_key = nothing
+        if occursin("parity=even", file)
+            parity_key = "even"
+        elseif occursin("parity=odd", file)
+            parity_key = "odd"
+        else
+            parity_key = "none"
+        end
+    
+        if occursin("inversion=even", file)
+            inversion_key = "even"
+        elseif occursin("inversion=odd", file)
+            inversion_key = "odd"
+        else
+            inversion_key = "none"
+        end
+    
+        if (parity_key, inversion_key) in keys(filename_groupings)
+            push!(filename_groupings[(parity_key, inversion_key)], file)
+        else
+            filename_groupings[(parity_key, inversion_key)] = [file]
+        end
+    end
+    for (key, val) in filename_groupings
+        filename_groupings[key] = sort(val, by=x->parse(Float64, split(x, "_")[2][3:end]))
+    end
+    return filename_groupings
 end
+
+# path = raw"/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/DMRG_runs_test/"
+path = raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\DMRG_runs_test"
+filename_groups = group_files_in_dir(path)
 
 include("operators.jl")
 include("observer.jl")
@@ -188,60 +208,76 @@ include("observer.jl")
 
 # println(even_files)
 # println(odd_files)
+Nspec = nothing
+Nsites = nothing
+evod = nothing
 overlap_threshold = 0.4
 curves = Dict() # vector of vector with two elements. First is g values, second is y value
 _past_mps_list = nothing
 _past_vectors = nothing
 num_completed_curves = 0
 println(path)
-for filename in even_files
-    println(filename)
-    g, _past_mps_list, overlap, energy_levels, even_m_parity, _past_vectors = compute_states(path, filename, _past_mps_list, _past_vectors; parity_symmetry_type="even", dim=Nspec, evod=evod)
-    h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data_%s", filename), "w") do file
-        if !isnothing(overlap)
-            write(file, "overlap", overlap)
-        end
-        write(file, "energy_levels", energy_levels)  
-        write(file, "even_m_parity", even_m_parity)  
-        write(file, "past_vectors", _past_vectors)  
-    end
+for ((parity_symmetry, inversion_symmetry), files) in filename_groups
     
-    global _past_mps_list, _past_vectors = _past_mps_list, _past_vectors
-    # adjusting curves based on overlap
-    if isnothing(overlap)
-        for (i,(energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
-            curves[i] = [[g], [energy], [parity]]
-        end
-    else
-        overlap = abs.(overlap).^2
-        # show(IOContext(stdout, :limit=>false), MIME"text/plain"(), overlap)
-        new_size, old_size = size(overlap)
-        used_indices = Set()
-        mapping = Dict()
-        for i=1:old_size
-            max_index = argmax(overlap[:,i])
-            if overlap[max_index, i] >= overlap_threshold && !(max_index in used_indices)
-                mapping[i] = max_index
-                push!(used_indices, max_index)
-            else
-                mapping[i] = string("curve", num_completed_curves)
-                global num_completed_curves += 1
-            end
-        end
-        global curves = Dict(get!(mapping, key, key)=>val for (key, val) in curves)
-        for (i, (energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
-            if !(i in used_indices)
-                curves[i] = [[g], [energy], [parity]]
-            else
-                push!(curves[i][1],g)
-                push!(curves[i][2],energy)
-                push!(curves[i][3],parity)
-            end
-        end
+    h5open(joinpath(path, files[1]), "r") do f1
+        # write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
+        global Nsites = read(f1, "N")
+        global Nspec = read(f1, "Nspec")
+        global evod = read(f1, "basis")
+    end
 
+    for filename in files
+        dict_key(x) = "$parity_symmetry-$inversion_symmetry-$x"
+        println(filename)
+        g, _past_mps_list, overlap, energy_levels, 
+        even_m_parity, _past_vectors = compute_states(path, filename, _past_mps_list, _past_vectors; 
+                                                    parity_symmetry_type="even", 
+                                                    inversion_symmetry_type="odd", dim=Nspec, evod=evod)
+        # h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data_%s", filename), "w") do file
+        #     if !isnothing(overlap)
+        #         write(file, "overlap", overlap)
+        #     end
+        #     write(file, "energy_levels", energy_levels)  
+        #     write(file, "even_m_parity", even_m_parity)  
+        #     write(file, "past_vectors", _past_vectors)  
+        # end
+        
+        global _past_mps_list, _past_vectors = _past_mps_list, _past_vectors
+        # adjusting curves based on overlap
+        if isnothing(overlap)
+            for (i,(energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
+                curves[dict_key(i)] = [[g], [energy], [parity]]
+            end
+        else
+            overlap = abs.(overlap).^2
+            # show(IOContext(stdout, :limit=>false), MIME"text/plain"(), overlap)
+            new_size, old_size = size(overlap)
+            used_indices = Set()
+            mapping = Dict()
+            for i=1:old_size
+                max_index = argmax(overlap[:,i])
+                if overlap[max_index, i] >= overlap_threshold && !(max_index in used_indices)
+                    mapping[dict_key(i)] = dict_key(max_index)
+                    push!(used_indices, dict_key(max_index))
+                else
+                    mapping[dict_key(i)] = dict_key("curve$num_completed_curves")
+                    global num_completed_curves += 1
+                end
+            end
+            global curves = Dict(get!(mapping, key, key)=>val for (key, val) in curves)
+            for (i, (energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
+                if !(dict_key(i) in used_indices)
+                    curves[dict_key(i)] = [[g], [energy], [parity]]
+                else
+                    push!(curves[dict_key(i)][1],g)
+                    push!(curves[dict_key(i)][2],energy)
+                    push!(curves[dict_key(i)][3],parity)
+                end
+            end
+
+        end
     end
 end
 println(curves)
-h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/plot_data.jld", "w") do file
-    write(file, "curves", curves)  # alternatively, say "@write file A"
-end
+# h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/plot_data.jld", "w") do file
+# save(raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\processed_DMRG/plot_data.jld", "curves", curves) 

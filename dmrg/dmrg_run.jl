@@ -54,11 +54,15 @@ if evod == "dvr"
 	global Y = tmp3
 end
 if evod == "m"
-	if use_inversion_symmetry
+    symmetry = trivial_symmetry
+	if use_inversion_symmetry && use_parity_symmetry
+		symmetry = x -> parity_symmetry(m_inversion_symmetry(x))
+	elseif use_inversion_symmetry
 		symmetry = m_inversion_symmetry
-	else
-		symmetry = trivial_symmetry
+	elseif use_parity_symmetry
+		symmetry = parity_symmetry
 	end
+
 
 	# define basis
 	global T = symmetry(Ttmp)
@@ -74,7 +78,7 @@ Nspec=size(T,1)
 include("operators.jl")
 include("observer.jl")
 
-sites = siteinds("PlaRotor",Nsites;dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
+sites = siteinds("PlaRotor",Nsites;basis=evod,dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
 
 Random.seed!(1234)
 psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)

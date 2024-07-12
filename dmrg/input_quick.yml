@@ -1,6 +1,6 @@
 #Basis size#
 filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
-Nspec: 11 # Nspec div 2 = mmax
+Nspec: 9 # Nspec div 2 = mmax
 
 #Number of sites#
 Nsites: 3
@@ -30,4 +30,4 @@ Nstates: 15
 
 #symmetry
 ParitySymmetry: 'even' #'even', 'odd', 'none'
-InversionSymmetry: 'none' #'even', 'odd', 'none'
+InversionSymmetry: 'odd' #'even', 'odd', 'none'
