@@ -6,9 +6,11 @@
 
 k=0
 
-for g in $(seq 0.1 0.1 2); do
+for g in $(seq 0.1 0.1 1.9); do
     ((k++))
     # echo $Nsites $mmax
-    sbatch run_dmrg.sh $g even
-    sbatch run_dmrg.sh $g odd
+    sbatch run_dmrg.sh $g even even
+    sbatch run_dmrg.sh $g odd odd
+    sbatch run_dmrg.sh $g even odd
+    sbatch run_dmrg.sh $g odd even
 done
