@@ -85,7 +85,7 @@ psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_typ
 
 
 sweeps = Sweeps(Nsweep)
-maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,30)
+maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
 setcutoff!(sweeps, e_cutoff)
 
 g = gstart
@@ -93,7 +93,7 @@ H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
 energy_eigenstates = MPS[]
 
 
-filename = format(Format(output_filename), g, Nsites, parity_symmetry_type)
+filename = format(Format(output_filename), g, Nsites, parity_symmetry_type, inversion_symmetry_type)
 println(filename)
 h5open(filename, "w") do file
 	write(file,"N", Nsites)
@@ -101,18 +101,27 @@ h5open(filename, "w") do file
 	write(file,"g", g)
 	write(file, "bond_dim", get_maxdims(sweeps))
 	write(file, "parity", parity_symmetry_type)
+	write(file, "inversion", inversion_symmetry_type)
 	write(file, "basis", evod)
 end
 
 
 # finding excited state with DMRG
+ground_energy = nothing
 for i in 1:Nstates
     energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=30)
     push!(energy_eigenstates, ψ)
+	if i == 1
+		global ground_energy = energy
+	end
 	println("Excitation: ", i)
 
 	h5open(filename, "r+") do file
 		write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
+		write(file, "energy", real.(energy))
+	end
+	if energy > ground_energy + 2*(Nsites-1)
+		break
 	end
 end
 

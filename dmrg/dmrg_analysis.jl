@@ -56,6 +56,7 @@ function get_mps_list(path)
     return mps_list 
 end
 
+
 function compute_states(path, filename, past_mps_list, past_vectors; parity_symmetry_type="even",inversion_symmetry_type="even", dim=11, evod="m")
     path = joinpath(path, filename)
 
@@ -198,16 +199,19 @@ function group_files_in_dir(path)
     return filename_groupings
 end
 
-# path = raw"/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/DMRG_runs_test/"
-path = raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\DMRG_runs_test"
-filename_groups = group_files_in_dir(path)
-
 include("operators.jl")
 include("observer.jl")
 
+_, _, _, _, _, 
+		_, gstart, _, _,
+        _, _, _, _, _, 
+		_, _, parity_symmetry_type,
+		inversion_symmetry_type = get_input_data("input_quick.yml"; default_filename="test")
 
-# println(even_files)
-# println(odd_files)
+path = raw"/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/DMRG_runs3/"
+# path = raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\DMRG_runs_test"
+filename_groups = group_files_in_dir(path)
+
 Nspec = nothing
 Nsites = nothing
 evod = nothing
@@ -218,7 +222,12 @@ _past_vectors = nothing
 num_completed_curves = 0
 println(path)
 for ((parity_symmetry, inversion_symmetry), files) in filename_groups
-    
+    ## delete me ##
+    if !(parity_symmetry == parity_symmetry_type && inversion_symmetry == inversion_symmetry_type)
+        continue
+    end
+    ###
+
     h5open(joinpath(path, files[1]), "r") do f1
         # write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
         global Nsites = read(f1, "N")
@@ -227,57 +236,68 @@ for ((parity_symmetry, inversion_symmetry), files) in filename_groups
     end
 
     for filename in files
+        ### delete me ###
+        if !(occursin(@sprintf("g=%.2f", gstart), filename) || occursin(@sprintf("g=%.2f", gstart+0.1), filename))
+            continue
+        end
+        ####
         dict_key(x) = "$parity_symmetry-$inversion_symmetry-$x"
         println(filename)
         g, _past_mps_list, overlap, energy_levels, 
         even_m_parity, _past_vectors = compute_states(path, filename, _past_mps_list, _past_vectors; 
                                                     parity_symmetry_type="even", 
                                                     inversion_symmetry_type="odd", dim=Nspec, evod=evod)
-        # h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data_%s", filename), "w") do file
-        #     if !isnothing(overlap)
-        #         write(file, "overlap", overlap)
-        #     end
-        #     write(file, "energy_levels", energy_levels)  
-        #     write(file, "even_m_parity", even_m_parity)  
-        #     write(file, "past_vectors", _past_vectors)  
-        # end
-        
-        global _past_mps_list, _past_vectors = _past_mps_list, _past_vectors
-        # adjusting curves based on overlap
-        if isnothing(overlap)
-            for (i,(energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
-                curves[dict_key(i)] = [[g], [energy], [parity]]
-            end
-        else
-            overlap = abs.(overlap).^2
-            # show(IOContext(stdout, :limit=>false), MIME"text/plain"(), overlap)
-            new_size, old_size = size(overlap)
-            used_indices = Set()
-            mapping = Dict()
-            for i=1:old_size
-                max_index = argmax(overlap[:,i])
-                if overlap[max_index, i] >= overlap_threshold && !(max_index in used_indices)
-                    mapping[dict_key(i)] = dict_key(max_index)
-                    push!(used_indices, dict_key(max_index))
-                else
-                    mapping[dict_key(i)] = dict_key("curve$num_completed_curves")
-                    global num_completed_curves += 1
-                end
-            end
-            global curves = Dict(get!(mapping, key, key)=>val for (key, val) in curves)
-            for (i, (energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
-                if !(dict_key(i) in used_indices)
-                    curves[dict_key(i)] = [[g], [energy], [parity]]
-                else
-                    push!(curves[dict_key(i)][1],g)
-                    push!(curves[dict_key(i)][2],energy)
-                    push!(curves[dict_key(i)][3],parity)
-                end
-            end
 
+        global _past_mps_list, _past_vectors = _past_mps_list, _past_vectors
+        if occursin(@sprintf("g=%.2f", gstart), filename)
+            continue
         end
+
+        h5open(@sprintf("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data2/processed_data_%s", filename), "w") do file
+            if !isnothing(overlap)
+                write(file, "overlap", overlap)
+            end
+            write(file, "g", g)  
+            write(file, "energy_levels", energy_levels)  
+            write(file, "even_m_parity", even_m_parity)  
+            write(file, "past_vectors", _past_vectors)  
+        end
+        
+
+        # # adjusting curves based on overlap
+        # if isnothing(overlap)
+        #     for (i,(energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
+        #         curves[dict_key(i)] = [[g], [energy], [parity]]
+        #     end
+        # else
+        #     overlap = abs.(overlap).^2
+        #     # show(IOContext(stdout, :limit=>false), MIME"text/plain"(), overlap)
+        #     new_size, old_size = size(overlap)
+        #     used_indices = Set()
+        #     mapping = Dict()
+        #     for i=1:old_size
+        #         max_index = argmax(overlap[:,i])
+        #         if overlap[max_index, i] >= overlap_threshold && !(max_index in used_indices)
+        #             mapping[dict_key(i)] = dict_key(max_index)
+        #             push!(used_indices, dict_key(max_index))
+        #         else
+        #             mapping[dict_key(i)] = dict_key("curve$num_completed_curves")
+        #             global num_completed_curves += 1
+        #         end
+        #     end
+        #     global curves = Dict(get!(mapping, key, key)=>val for (key, val) in curves)
+        #     for (i, (energy, parity)) in enumerate(zip(energy_levels, even_m_parity))
+        #         if !(dict_key(i) in used_indices)
+        #             curves[dict_key(i)] = [[g], [energy], [parity]]
+        #         else
+        #             push!(curves[dict_key(i)][1],g)
+        #             push!(curves[dict_key(i)][2],energy)
+        #             push!(curves[dict_key(i)][3],parity)
+        #         end
+        #     end
+
+        # end
     end
 end
-println(curves)
-# h5open("/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/plot_data.jld", "w") do file
-# save(raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\processed_DMRG/plot_data.jld", "curves", curves) 
+# println(curves)
+# save(raw"/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/processed_data/plot_data.jld", "curves", curves) 

@@ -3,14 +3,14 @@ filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
 Nspec: 9 # Nspec div 2 = mmax
 
 #Number of sites#
-Nsites: 3
+Nsites: 100
 Nbond: 50
-Nsweep: 50
+Nsweep: 300
 ecutoff: 1e-11
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 5
+gstart: 1.9
 dg: 0.1
 Ng: 1
 mbond: 5
@@ -26,7 +26,7 @@ angle: 90.0 #in degrees
 strength: 0.0
 
 #Excited states#
-Nstates: 15
+Nstates: 20
 
 #symmetry
 ParitySymmetry: 'even' #'even', 'odd', 'none'
