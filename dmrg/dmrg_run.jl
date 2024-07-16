@@ -118,7 +118,8 @@ for i in 1:Nstates
 
 	h5open(filename, "r+") do file
 		write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
-		write(file, "energy", real.(energy))
+		write(file, string("energy/",i), real.(energy))
+		write(file, string("Delta H/",i), sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
 	end
 	if energy > ground_energy + 2*(Nsites-1)
 		break
