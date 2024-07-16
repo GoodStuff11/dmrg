@@ -78,7 +78,7 @@ function MParityOperator(dim)
 	mmax = dim ÷ 2
 	arr = zeros(dim,dim)
 	for i = 1:dim
-		arr[i, i] = (-1)^((i-mmax)%2)
+		arr[i, i] = -(-1)^((i-mmax)%2)
 	end
 	return arr
 end

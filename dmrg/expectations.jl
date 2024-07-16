@@ -6,7 +6,11 @@
 
 #export vN_entropy,polarization,correlation
 ################################################################################
-function vN_entropy(_wf,mbond)
+function vN_entropy(_wf;mbond=nothing)
+	if isnothing(mbond)
+		mbond = length(_wf) ÷ 2 +1
+	end
+
 	wf=copy(_wf)	###to ensure that this function is not mutating wf
 	if length(wf) == 2
 		orthogonalize!(wf, 2)
@@ -31,15 +35,16 @@ function vN_entropy(_wf,mbond)
 	end
 	renyi=-0.5*log(purity)
 	return SvN,purity, schmidtvalues
-	end
+end
 ################################################################################
-function polarization(wf,Nsites,Nbasis,evod,Xmat,Ymat)
+function polarization(wf,evod)
 
-	global X = Xmat
-	global Y = Ymat
-	global Nspec = Nbasis
+	# global X = Xmat
+	# global Y = Ymat
+	# global Nspec = Nbasis
 
-	include("operators.jl")
+	# include("operators.jl")
+	Nsites = length(wf)
 
 	if evod == "dvr"
 		mux = expect(wf,"X")
@@ -71,23 +76,18 @@ function polarization(wf,Nsites,Nbasis,evod,Xmat,Ymat)
 return real(sum(mux)),real(sum(muy))
 end
 ################################################################################
-function correlation(wf,Nsites,Nbasis,evod,Xmat,Ymat)
+function correlation(wf,evod)
 
-	global X = Xmat
-	global Y = Ymat
-	global Nspec = Nbasis
+	# global X = Xmat
+	# global Y = Ymat
+	# global Nspec = Nbasis
+	Nsites = length(wf)
 
-	include("operators.jl")
+	# include("operators.jl")
 
-	if evod == "dvr"
-		dumX = correlation_matrix(wf,"X","X")
-		dumY = correlation_matrix(wf,"Y","Y")
-	else
-		dumX = correlation_matrix(wf,"X","X")
-		#dumY = correlation_matrix(wf,"Ycomp","Ycomp")
-		#pn hack
-		dumY = correlation_matrix(wf,"Y","Y")
-	end
+	dumX = correlation_matrix(wf,"X","X")
+	dumY = correlation_matrix(wf,"Y","Y")
+
 
 	Xcorr=0.0
 	Ycorr=0.0

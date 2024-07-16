@@ -15,7 +15,7 @@
 end
 =#
 
-function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
+function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m", get_ampo=false)
 	Nsites = length(sites)
 
 	Nsecond = zeros(Int64,(Nsites-1))
@@ -69,7 +69,11 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m")
 		ampo += -sin(angle)*Estrength*fac2,"Y",Nsites
 	end
 	H = MPO(ampo,sites)
-	return H
+    if get_ampo
+	    return H, ampo
+    else
+        return H
+    end
 end
 
 function label_states_by_parity(dim::Int)

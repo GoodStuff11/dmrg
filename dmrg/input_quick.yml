@@ -1,16 +1,16 @@
 #Basis size#
-filename: "../output_data/DMRG_runs4/DMRG_g=%0.2f_N=%d_parity=%s_inversion=%s.jld"
-Nspec: 9 # Nspec div 2 = mmax
+filename: "../output_data/DMRG_runs/DMRG_g=%0.2f_N=%d_parity=%s.jld"
+Nspec: 8 # Nspec div 2 = mmax
 
 #Number of sites#
-Nsites: 100
+Nsites: 5
 Nbond: 50
-Nsweep: 300
-ecutoff: 1e-11
+Nsweep: 3
+ecutoff: 1e-8
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 1.9
+gstart: 0.3
 dg: 0.1
 Ng: 1
 mbond: 5
@@ -19,15 +19,15 @@ mbond: 5
 pairs: nearest #nearest,allpairs
 
 #Basis states#
-states: m # m or dvr
+states: dvr # m or dvr
 
 #External electric field#
 angle: 90.0 #in degrees
 strength: 0.0
 
 #Excited states#
-Nstates: 20
+Nstates: 15
 
 #symmetry
-ParitySymmetry: 'even' #'even', 'odd', 'none'
-InversionSymmetry: 'odd' #'even', 'odd', 'none'
+ParitySymmetry: 'none' #'even', 'odd', 'none'
+InversionSymmetry: 'none' #'even', 'odd', 'none'
