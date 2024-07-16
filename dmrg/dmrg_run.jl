@@ -73,8 +73,6 @@ if evod == "m"
 end
 
 
-Nspec=size(T,1)
-
 include("operators.jl")
 include("observer.jl")
 
