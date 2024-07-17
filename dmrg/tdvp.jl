@@ -124,7 +124,7 @@ let
 	H, ampo = create_Hamiltonian(g, sites, "nearest"; evod=evod, get_ampo=true)
 
 	# println("g= ",g," before transform <psi|H|psi>=  ",inner(psi,  apply(H, psi)))
-	println("g= ",g," after transform <psit0|H|psit0>=  ",inner(psit0',  apply(H, psit0)))
+	println("g= ",g," after transform <psit0|H|psit0>=  ",inner(psit0', H, psit0))
 
 	#################################
 	# prepare TTN of state
@@ -196,7 +196,7 @@ let
 	end
 	
 	function return_Svals(;state)
-		return vN_entropy(TTN_to_MPS(state))[3]
+		return vN_entropy(TTN_to_MPS(state))[1:2]
 	end
 	function return_maxlinkdim(;state)
 		return maxlinkdim(state)
@@ -211,7 +211,7 @@ let
 	
 	obs = observer(
 		"steps" => step, "time" => return_time,"step_duration"=>step_duration, 
-		"overlap" => return_overlap, "corr" => return_corr, "Svals" => return_Svals, "maxlinkdim" => return_maxlinkdim,
+		"overlap" => return_overlap, "corr" => return_corr, "Svals_Purity" => return_Svals, "maxlinkdim" => return_maxlinkdim,
 		"memory(GB)" => get_memory
 		# "norm" => return_norm
 	)
