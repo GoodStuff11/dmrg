@@ -5,7 +5,7 @@ Nspec: 8 # Nspec div 2 = mmax
 #Number of sites#
 Nsites: 5
 Nbond: 50
-Nsweep: 3
+Nsweep: 100
 ecutoff: 1e-8
 SVD: 1e-8
 

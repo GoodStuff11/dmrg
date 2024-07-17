@@ -39,7 +39,7 @@ end
 # util function to save data in obs
 function savedata(name::String, obs; kwargs...)
   name == "" && return
-  h5open(name*".h5", "w") do file    
+  h5open(name, "w") do file    
     for pair in kwargs
       file["variables/"*String(pair[1])] = pair[2]
     end

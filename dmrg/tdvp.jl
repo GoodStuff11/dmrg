@@ -45,7 +45,7 @@ Nspec, Nsites, Nbonds, Nsweep, e_cutoff,
 		SVD_error, gstart, delta_g, Ng,
         mbond, pairs, evod, angle, Estrength, 
 		Nstates, output_filename, parity_symmetry_type,
-		inversion_symmetry_type = get_input_data("input_quick.yml"; default_filename="psi0_N6_g")
+		inversion_symmetry_type = get_input_data("input_quick_TDVP.yml"; default_filename="psi0_N6_g")
 
 ###{tdvp_filename}.h5 will be where the data is stored (written to on the fly while propagating every 5th sweep by default)
 ###ToDo: we might want to parse the name for that file from input
@@ -103,7 +103,7 @@ let
 
 	g = 1.1
 
-	tdvp_filename = format(Format(output_filename), g, Nsites, parity_symmetry_type, inversion_symmetry_type)
+	tdvp_filename = format(Format(output_filename), g, Nsites, e_cutoff)
 	# dmrg_filename = @sprintf("dmrg_logs/%sg=%.3f",output_filename,g)
 
 	sites = siteinds("PlaRotor",Nsites;basis=evod,dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)

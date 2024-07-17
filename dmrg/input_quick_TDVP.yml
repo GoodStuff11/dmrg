@@ -1,0 +1,33 @@
+#Basis size#
+filename: "../output_data/TDVP_runs/TDVP_g=%0.2f_N=%d_cutoff=%.2E.jld"
+Nspec: 8 # Nspec div 2 = mmax
+
+#Number of sites#
+Nsites: 5
+Nbond: 50
+Nsweep: 
+ecutoff: 1e-8
+SVD: 1e-8
+
+#Interaction strength#
+gstart: 1.1
+dg: 0.1
+Ng: 1
+mbond: 5
+
+#Interaction pairs#
+pairs: nearest #nearest,allpairs
+
+#Basis states#
+states: dvr # m or dvr
+
+#External electric field#
+angle: 90.0 #in degrees
+strength: 0.0
+
+#Excited states#
+Nstates: 15
+
+#symmetry
+ParitySymmetry: 'none' #'even', 'odd', 'none'
+InversionSymmetry: 'none' #'even', 'odd', 'none'

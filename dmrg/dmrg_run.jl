@@ -22,7 +22,7 @@ Nspec, Nsites, Nbonds, Nsweep, e_cutoff,
 		SVD_error, gstart, delta_g, Ng,
         mbond, pairs, evod, angle, Estrength, 
 		Nstates, output_filename, parity_symmetry_type,
-		inversion_symmetry_type = get_input_data("input_quick.yml"; default_filename="test")
+		inversion_symmetry_type = get_input_data("input_quick_DMRG.yml"; default_filename="test")
 
 ###{tdvp_filename}.h5 will be where the data is stored (written to on the fly while propagating every 5th sweep by default)
 ###ToDo: we might want to parse the name for that file from input
