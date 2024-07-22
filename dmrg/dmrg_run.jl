@@ -106,7 +106,7 @@ end
 # finding excited state with DMRG
 ground_energy = nothing
 for i in 1:Nstates
-	observer = ITensorMPS.DMRGObserver(;energy_tol=e_cutoff, minsweeps=10)
+	observer = ITensorMPS.DMRGObserver(;energy_tol=e_cutoff, minsweeps=40)
     energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=100, observer)
     push!(energy_eigenstates, ψ)
 	if i == 1

@@ -133,12 +133,12 @@ function main()
     #         Nsites=Nsites, mmax=mmax);
     #         Nsites=Nsites, mmax=mmax)
     # println(dot(state1,state2)/(sqrt(dot(state1,state1))*sqrt(dot(state2,state2))))
-    for mmax in 3:3
+    for mmax in 3:5
         println("mmax",mmax)
         Nsites = 6
         println("Nsites",Nsites)
         prev_vecs = nothing
-        for g in 1:30
+        for g in [0.25,0.5,0.75]
             energies = 20
             Estrength = 0
             angle = 90

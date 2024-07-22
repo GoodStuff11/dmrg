@@ -5,12 +5,12 @@ Nspec: 11 # Nspec div 2 = mmax
 #Number of sites#
 Nsites: 100
 Nbond: 50
-Nsweep: 100
-ecutoff: 1e-8
+Nsweep: 10
+ecutoff: 1e-9
 SVD: 1e-8
 
 #Interaction strength#
-gstart: 0.3
+gstart: 1.7
 dg: 0.1
 Ng: 1
 mbond: 5
@@ -19,6 +19,7 @@ mbond: 5
 pairs: nearest #nearest,allpairs
 
 #Basis states#
+states: m # m or dvr
 states: m # m or dvr
 
 #External electric field#
@@ -29,5 +30,5 @@ strength: 0.0
 Nstates: 15
 
 #symmetry
-ParitySymmetry: 'none' #'even', 'odd', 'none'
-InversionSymmetry: 'none' #'even', 'odd', 'none'
+ParitySymmetry: 'even' #'even', 'odd', 'none'
+InversionSymmetry: 'even' #'even', 'odd', 'none'
