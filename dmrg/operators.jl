@@ -63,7 +63,6 @@ function create_Hamiltonian(g, sites, pairs; Estrength=0,angle=0, evod="m", get_
 	end
 	ampo += 1.0,"T",Nsites
 	#Electric field#
-
 	if !iszero(Estrength)
 		ampo += -cos(angle)*Estrength,"X",Nsites
 		ampo += -sin(angle)*Estrength*fac2,"Y",Nsites

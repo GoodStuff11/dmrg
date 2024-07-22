@@ -82,7 +82,7 @@ Random.seed!(1234)
 psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
 
 
-sweeps = Sweeps(Nsweep)
+sweeps = Sweeps(300)
 maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
 setcutoff!(sweeps, e_cutoff)
 
@@ -91,7 +91,7 @@ H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
 energy_eigenstates = MPS[]
 
 
-filename = format(Format(output_filename), g, Nsites, parity_symmetry_type, inversion_symmetry_type)
+filename = format(Format(output_filename), Nspec, g, Nsites, parity_symmetry_type, inversion_symmetry_type)
 println(filename)
 h5open(filename, "w") do file
 	write(file,"N", Nsites)
@@ -107,7 +107,8 @@ end
 # finding excited state with DMRG
 ground_energy = nothing
 for i in 1:Nstates
-    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=30)
+	observer = ITensorMPS.DMRGObserver(;energy_tol=e_cutoff, minsweeps=40)
+    energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=100, observer)
     push!(energy_eigenstates, ψ)
 	if i == 1
 		global ground_energy = energy
@@ -115,9 +116,13 @@ for i in 1:Nstates
 	println("Excitation: ", i)
 
 	h5open(filename, "r+") do file
-		write(file, string("energy_eigenstates/", i), energy_eigenstates[i])
-		write(file, string("energy/",i), real.(energy))
-		write(file, string("Delta H/",i), sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
+		write(file, "energy_eigenstates/$i", energy_eigenstates[i])
+		write(file, "energy/$i", real.(energy))
+		dH = sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2)
+		println(dH)
+		write(file, "Delta H/$i", dH)
+		write(file, "iteration_energy/$i" , ITensorMPS.energies(observer))
+		# write(file, string("Delta H/",i), sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
 	end
 	if energy > ground_energy + 2*(Nsites-1)
 		break
