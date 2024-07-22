@@ -37,7 +37,7 @@ function vN_entropy(_wf;mbond=nothing)
 	return SvN,purity, schmidtvalues
 end
 ################################################################################
-function polarization(wf,evod)
+function polarization(wf)
 
 	# global X = Xmat
 	# global Y = Ymat
@@ -46,21 +46,13 @@ function polarization(wf,evod)
 	# include("operators.jl")
 	Nsites = length(wf)
 
-	if evod == "dvr"
-		mux = expect(wf,"X")
-		muy = expect(wf,"Y")
-
-		dumX = correlation_matrix(wf,"X","X")
-		dumY = correlation_matrix(wf,"Y","Y")
-	else
-		mux = expect(wf,"X")
-		#muy = expect(wf,"Ycomp")
-		muy = expect(wf,"Y")
-		
-		dumX = correlation_matrix(wf,"X","X")
-		#dumY = correlation_matrix(wf,"Ycomp","Ycomp")
-		dumY = correlation_matrix(wf,"Y","Y")
-	end
+	mux = expect(wf,"X")
+	#muy = expect(wf,"Ycomp")
+	muy = expect(wf,"Y")
+	
+	dumX = correlation_matrix(wf,"X","X")
+	#dumY = correlation_matrix(wf,"Ycomp","Ycomp")
+	dumY = correlation_matrix(wf,"Y","Y")
 
 	mux2=0.0
 	muy2=0.0
