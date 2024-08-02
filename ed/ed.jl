@@ -5,10 +5,11 @@ using LinearAlgebra
 
 push!(LOAD_PATH,joinpath(pwd(),"ed"))
 include("observables.jl")
+using .observables
 
-function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
+function Hamiltonian(state::Vector{T}; Nsites, mmax, g, angle, Estrength, pairs) where {T<:Number}
     dim = 2*mmax + 1
-    final_state = zeros(ComplexF64, size(state))
+    final_state = zeros(T, size(state))
     for i in 1:Nsites
         # Ti
         for k in 1:dim^Nsites # iterate over all states
@@ -65,13 +66,13 @@ function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     end
     return final_state
 end
-function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs, dimension_parity="odd")
+function Hamiltonian_DVR(state::Vector{T}; Nsites, mmax, g, angle, Estrength, pairs, dimension_parity="odd") where {T<:Number}
     if dimension_parity == "odd"
         dim = 2*mmax + 1
     else
         dim = 2*mmax
     end
-    final_state = zeros(ComplexF64, size(state))
+    final_state = zeros(T, size(state))
     for i in 1:Nsites
         # Ti
         for k in 1:dim^Nsites # iterate over all states
@@ -133,18 +134,20 @@ function main()
     #         Nsites=Nsites, mmax=mmax);
     #         Nsites=Nsites, mmax=mmax)
     # println(dot(state1,state2)/(sqrt(dot(state1,state1))*sqrt(dot(state2,state2))))
+    pairs = "nearest"
     for mmax in 3:5
-        println("mmax",mmax)
-        Nsites = 6
-        println("Nsites",Nsites)
+        println("mmax $mmax")
+        Nsites = 3
+        println("Nsites $Nsites")
         prev_vecs = nothing
-        for g in [0.25,0.5,0.75]
+        for g in [0.25,0.5,1,2]
             energies = 20
             Estrength = 0
             angle = 90
-            outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data"
+            # outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/ed_data"
+            outputpath = raw"C:\Users\jonat\OneDrive\Documents\programming\AnacondaProjects\PHYS437B\dmrg\output_data\ed_data"
             
-            filename = joinpath(outputpath, "deleteme.csv")
+            filename = joinpath(outputpath, "ED_calculations.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
             else
@@ -174,13 +177,13 @@ function main()
             t2 = @elapsed begin
                 for i in 1:energies
                     data["E$i"] = real(vals[i])
-                    data["correlation$i"] = correlation(vecs[i]; Nsites=Nsites, mmax=mmax)
-                    SvN, _ = vN_entropy(vecs[i]; Nsites=Nsites, mmax=mmax, split=Nsites ÷ 2)
-                    data["SvN$i"] = SvN                
-                    data["reflection_symmetry$i"]= dot(vecs[i], even_reflection_projection(vecs[i]; Nsites=Nsites, mmax=mmax))
-                    data["inversion_symmetry$i"]= dot(vecs[i], even_inversion_projection(vecs[i]; Nsites=Nsites, mmax=mmax))
-                    data["parity$i"] = dot(vecs[i], parity_projection(vecs[i]; Nsites=Nsites, mmax=mmax, parity="even"))
-                    if prev_vecs == nothing
+                    data["correlation$i"] = correlation(vecs[i]; Nsites=Nsites, dim=2*mmax+1)
+                    SvN, _ = vN_entropy(vecs[i]; Nsites=Nsites, dim=2*mmax+1, split=Nsites ÷ 2)
+                    data["SvN$i"] = SvN
+                    data["reflection_symmetry$i"]= dot(vecs[i], reflection_projection(vecs[i]; Nsites=Nsites, dim=2*mmax+1, parity="even"))
+                    data["inversion_symmetry$i"]= dot(vecs[i], inversion_projection_m(vecs[i]; Nsites=Nsites, dim=2*mmax+1, parity="even"))
+                    data["parity$i"] = dot(vecs[i], parity_projection_m(vecs[i]; Nsites=Nsites, dim=2*mmax+1, parity="even"))
+                    if isnothing(prev_vecs)
                         data["prev_corresponding_energy$i"] = i
                     else
                         diffs = [abs(dot(vecs[i], v1)) for v1 in prev_vecs]
@@ -205,12 +208,5 @@ function main()
     end
 end
 
-function main2()
-    mmax = 4
-    Nsites = 6
-    for g in 1:30
-
-    end
-end
 
 # main()
