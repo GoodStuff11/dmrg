@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --account=rrg-pnroy 
-#SBATCH --mem=3G
+#SBATCH --mem=250G
 #SBATCH --time=2-00:00
 
 module load julia/1.9.3

@@ -147,7 +147,7 @@ function main()
 
             outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/ed_data"
 
-            filename = joinpath(outputpath, "ED_calculations.csv")
+            filename = joinpath(outputpath, "ED_calculations2.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
             else

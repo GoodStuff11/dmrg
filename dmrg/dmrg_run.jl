@@ -77,6 +77,8 @@ include("operators.jl")
 include("observer.jl")
 
 # collect energy eigenstates
+energy_eigenstates = MPS[]
+g = gstart
 get_filename(i) = format(Format(output_filename), i, Nspec, g, Nsites, parity_symmetry_type, inversion_symmetry_type)
 for i in 1:Nstates
 	filename = get_filename(i)
@@ -97,9 +99,9 @@ sweeps = Sweeps(Nsweep)
 maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
 setcutoff!(sweeps, e_cutoff)
 
-g = gstart
+
 H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
-energy_eigenstates = MPS[]
+
 
 Random.seed!(1234)
 psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
