@@ -4,13 +4,13 @@
 #     sbatch run.sh "data_$k" $i 0.1 1 5 6
 # done
 
-k=0
 
-for g in $(seq 0.1 0.4 1.9); do
-    ((k++))
-    # echo $Nsites $mmax
-    sbatch run_dmrg.sh $g even even
-    sbatch run_dmrg.sh $g odd odd
-    sbatch run_dmrg.sh $g even odd
-    sbatch run_dmrg.sh $g odd even
+for Nspec in 9 11 13; do
+    for g in 0.25 0.5; do
+        # echo $Nsites $mmax
+        sbatch run_dmrg.sh $g even even $Nspec 100
+        sbatch run_dmrg.sh $g odd odd $Nspec 100
+        sbatch run_dmrg.sh $g even odd $Nspec 100
+        sbatch run_dmrg.sh $g odd even $Nspec 100
+    done
 done

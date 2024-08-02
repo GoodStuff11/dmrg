@@ -76,11 +76,22 @@ end
 include("operators.jl")
 include("observer.jl")
 
-sites = siteinds("PlaRotor",Nsites;basis=evod,dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
-
-Random.seed!(1234)
-psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
-
+# collect energy eigenstates
+get_filename(i) = format(Format(output_filename), i, Nspec, g, Nsites, parity_symmetry_type, inversion_symmetry_type)
+for i in 1:Nstates
+	filename = get_filename(i)
+	if !isfile(filename)
+		break
+	end
+	h5open(filename, "r") do file
+		push!(energy_eigenstates, read(file, "energy_eigenstates",MPS))
+	end
+end
+if length(energy_eigenstates) > 0
+	sites = siteinds(energy_eigenstates[1])
+else
+	sites = siteinds("PlaRotor",Nsites;basis=evod,dim=Nspec, conserve_parity=use_parity_symmetry, conserve_inversion_symmetry=use_inversion_symmetry)
+end
 
 sweeps = Sweeps(Nsweep)
 maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
@@ -90,48 +101,39 @@ g = gstart
 H = create_Hamiltonian(g, sites, "nearest"; evod=evod)
 energy_eigenstates = MPS[]
 
-
-filename = format(Format(output_filename), Nspec, g, Nsites, parity_symmetry_type, inversion_symmetry_type)
-println(filename)
-h5open(filename, "w") do file
-	write(file,"N", Nsites)
-	write(file,"Nspec", Nspec)
-	write(file,"g", g)
-	write(file, "bond_dim", get_maxdims(sweeps))
-	write(file, "parity", parity_symmetry_type)
-	write(file, "inversion", inversion_symmetry_type)
-	write(file, "basis", evod)
-end
+Random.seed!(1234)
+psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
 
 # finding excited state with DMRG
-ground_energy = nothing
-for i in 1:Nstates
+for i in length(energy_eigenstates)+1:Nstates
+	println("Excitation: ", i)
 	observer = ITensorMPS.DMRGObserver(;energy_tol=e_cutoff, minsweeps=40)
     energy, ψ = dmrg(H,energy_eigenstates, psi, sweeps;outputlevel=1, weight=100, observer)
     push!(energy_eigenstates, ψ)
-	if i == 1
-		global ground_energy = energy
-	end
-	println("Excitation: ", i)
 
-	h5open(filename, "r+") do file
-		svn, purity, schmidt = vN_entropy(ψ)
-		mux, muy = polarization(ψ)
-		corrx, corry = correlation(ψ, evod)
-		write(file, "energy_eigenstates/$i", energy_eigenstates[i])
-		write(file, "energy/$i", real.(energy))
-		write(file, "Delta H/$i", sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
-		write(file, "iteration_energy/$i" , ITensorMPS.energies(observer))
-		write(file, "entropy/$i", svn)
-		write(file, "purity/$i", purity)
-		write(file, "schmidt/$i", schmidt)
-		write(file, "mux/$i", mux)
-		write(file, "muy/$i", muy)
-		write(file, "corrx/$i", corrx)
-		write(file, "corry/$i", corry)
-	end
-	if energy > ground_energy + 2*(Nsites-1)
-		break
+	svn, purity, schmidt = vN_entropy(ψ)
+	mux, muy = polarization(ψ)
+	corrx, corry = correlation(ψ, evod)
+	filename = get_filename(i)*"_tmp" 
+	h5open(filename, "w") do file
+		write(file, "energy_eigenstates", energy_eigenstates[i])
+		write(file, "energy", real.(energy))
+		write(file, "Delta H", sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
+		write(file, "iteration_energy" , ITensorMPS.energies(observer))
+		write(file, "entropy", svn)
+		write(file, "purity", purity)
+		write(file, "schmidt", schmidt)
+		write(file, "mux", mux)
+		write(file, "muy", muy)
+		write(file, "corrx", corrx)
+		write(file, "corry", corry)
+		write(file,"N", Nsites)
+		write(file,"Nspec", Nspec)
+		write(file,"g", g)
+		write(file, "bond_dim", get_maxdims(sweeps))
+		write(file, "parity", parity_symmetry_type)
+		write(file, "inversion", inversion_symmetry_type)
+		write(file, "basis", evod)
 	end
 end
 
