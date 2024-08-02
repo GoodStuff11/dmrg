@@ -36,13 +36,13 @@ function correlation(state::Vector{T};Nsites, dim, axis="X") where {T<:Number}
             end
         end
     end
-    return real(dot(state, final_state)/(Nsites - 1)/4)
+    return real(dot(state, final_state)/4)
 end
 
 function vN_entropy(state; Nsites, dim, split)
     state_matrix =  sparse(reshape(state,(dim^(Nsites-split),dim^split))')
     vector_size = dim^split # dim^(Nsites-split)
-    p = KrylovKit.eigsolve(state_matrix*state_matrix', vector_size, 10, :LR)[1]
+    p = abs.(KrylovKit.eigsolve(state_matrix*state_matrix', vector_size, 10, :LR)[1])
     # n_singular_values = min(dim^(Nsites-split), dim^split)
     # using a random initial vector because that is unlikely to cause svdsolve to crash
     # vals, _, _, _ = KrylovKit.svdsolve(state_matrix, vector_size, min(n_singular_values,30), :LR)
