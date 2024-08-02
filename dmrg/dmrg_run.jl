@@ -82,8 +82,8 @@ Random.seed!(1234)
 psi = generate_initial_state(sites; parity_symmetry_type, inversion_symmetry_type)
 
 
-sweeps = Sweeps(300)
-maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
+sweeps = Sweeps(Nsweep)
+maxdim!(sweeps,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,30,30,30,30,30, 30,30,30,30,30,30,30, 30,35,35,35,35,35,35,35,35,35,50,50,50,50,50,50,50,50,50,50,60)
 setcutoff!(sweeps, e_cutoff)
 
 g = gstart
@@ -103,7 +103,6 @@ h5open(filename, "w") do file
 	write(file, "basis", evod)
 end
 
-
 # finding excited state with DMRG
 ground_energy = nothing
 for i in 1:Nstates
@@ -116,13 +115,20 @@ for i in 1:Nstates
 	println("Excitation: ", i)
 
 	h5open(filename, "r+") do file
+		svn, purity, schmidt = vN_entropy(ψ)
+		mux, muy = polarization(ψ)
+		corrx, corry = correlation(ψ, evod)
 		write(file, "energy_eigenstates/$i", energy_eigenstates[i])
 		write(file, "energy/$i", real.(energy))
-		dH = sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2)
-		println(dH)
-		write(file, "Delta H/$i", dH)
+		write(file, "Delta H/$i", sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
 		write(file, "iteration_energy/$i" , ITensorMPS.energies(observer))
-		# write(file, string("Delta H/",i), sqrt(inner(ψ,apply(H,apply(H,ψ)))-energy^2))
+		write(file, "entropy/$i", svn)
+		write(file, "purity/$i", purity)
+		write(file, "schmidt/$i", schmidt)
+		write(file, "mux/$i", mux)
+		write(file, "muy/$i", muy)
+		write(file, "corrx/$i", corrx)
+		write(file, "corry/$i", corry)
 	end
 	if energy > ground_energy + 2*(Nsites-1)
 		break

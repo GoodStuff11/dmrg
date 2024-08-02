@@ -1,9 +1,9 @@
 #Basis size#
-filename: "../output_data/DMRG_Nspec=%d_g=%0.2f_N=%d_parity=%s_inversion=%s.jld"
-Nspec: 13 # Nspec div 2 = mmax
+filename: "../output_data/DMRG_runs/DMRG_Nspec=%d_g=%0.2f_N=%d_parity=%s_inversion=%s.jld"
+Nspec: 11 # Nspec div 2 = mmax
 
 #Number of sites#
-Nsites: 10
+Nsites: 100
 Nbond: 50
 Nsweep: 10
 ecutoff: 1e-9
@@ -19,6 +19,7 @@ mbond: 5
 pairs: nearest #nearest,allpairs
 
 #Basis states#
+states: m # m or dvr
 states: m # m or dvr
 
 #External electric field#
