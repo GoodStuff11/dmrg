@@ -7,9 +7,9 @@ push!(LOAD_PATH,joinpath(pwd(),"ed"))
 include("observables.jl")
 using .observables
 
-function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
+function Hamiltonian(state::Vector{T}; Nsites, mmax, g, angle, Estrength, pairs) where {T<:Number}
     dim = 2*mmax + 1
-    final_state = zeros(ComplexF64, size(state))
+    final_state = zeros(T, size(state))
     for i in 1:Nsites
         # Ti
         for k in 1:dim^Nsites # iterate over all states
@@ -66,13 +66,13 @@ function Hamiltonian(state; Nsites, mmax, g, angle, Estrength, pairs)
     end
     return final_state
 end
-function Hamiltonian_DVR(state; Nsites, mmax, g, angle, Estrength, pairs, dimension_parity="odd")
+function Hamiltonian_DVR(state::Vector{T}; Nsites, mmax, g, angle, Estrength, pairs, dimension_parity="odd") where {T<:Number}
     if dimension_parity == "odd"
         dim = 2*mmax + 1
     else
         dim = 2*mmax
     end
-    final_state = zeros(ComplexF64, size(state))
+    final_state = zeros(T, size(state))
     for i in 1:Nsites
         # Ti
         for k in 1:dim^Nsites # iterate over all states
@@ -144,8 +144,9 @@ function main()
             energies = 20
             Estrength = 0
             angle = 90
+
             outputpath = "/home/jkambulo/projects/def-pnroy/jkambulo/dmrg/output_data/ed_data"
-            
+
             filename = joinpath(outputpath, "ED_calculations.csv")
             if isfile(filename)
                 df = DataFrame(CSV.File(filename))
@@ -207,5 +208,5 @@ function main()
     end
 end
 
-
 main()
+

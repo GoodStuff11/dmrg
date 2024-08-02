@@ -1,12 +1,14 @@
 module observables
 using LinearAlgebra
 import KrylovKit
+using SparseArrays
 
 export correlation, vN_entropy, reflection_projection, inversion_projection_m, parity_projection_m, inversion_projection_dvr
 
-function correlation(state;Nsites, dim)
+function correlation(state::Vector{T};Nsites, dim, axis="X") where {T<:Number}
     ## 1/(N-1) sum_1^(N-1) 1/2(U_i D_(i+1) + D_i U_(i+1))
-    final_state = zeros(ComplexF64, size(state))
+    c = if axis=="X" 1 else -1 end
+    final_state = zeros(T, size(state))
     for i in 1:Nsites-1
         j = i+1
         for k in 1:dim^Nsites
@@ -15,36 +17,47 @@ function correlation(state;Nsites, dim)
 
             # up down
             if (mk_i < dim - 1) && (mk_j > 0)
-                final_state[k + dim^(i-1) - dim^(j-1)] += 0.5*state[k]
+                final_state[k + dim^(i-1) - dim^(j-1)] += state[k]
             end
 
             # down up
             if (mk_i > 0) && (mk_j < dim - 1)
-                final_state[k - dim^(i-1) + dim^(j-1)] += 0.5*state[k]
+                final_state[k - dim^(i-1) + dim^(j-1)] += state[k]
+            end
+
+            # down down
+            if (mk_i > 0) && (mk_j > 0) 
+                final_state[k - dim^(i-1) - dim^(j-1)] += c*state[k]
+            end
+
+            # up up
+            if (mk_i < dim - 1) && (mk_j < dim - 1)
+                final_state[k + dim^(i-1) + dim^(j-1)] += c*state[k]
             end
         end
     end
-    return real(dot(conj.(state), final_state)/(Nsites - 1))
+    return real(dot(state, final_state)/(Nsites - 1)/4)
 end
 
 function vN_entropy(state; Nsites, dim, split)
-    state_matrix =  reshape(state,(dim^(Nsites-split),dim^split))'
+    state_matrix =  sparse(reshape(state,(dim^(Nsites-split),dim^split))')
     vector_size = dim^split # dim^(Nsites-split)
-    n_singular_values = min(dim^(Nsites-split), dim^split)
+    p = KrylovKit.eigsolve(state_matrix*state_matrix', vector_size, 10, :LR)[1]
+    # n_singular_values = min(dim^(Nsites-split), dim^split)
     # using a random initial vector because that is unlikely to cause svdsolve to crash
-    vals, _, _, _ = KrylovKit.svdsolve(state_matrix, rand((vector_size,)), min(n_singular_values,30), :LR)
+    # vals, _, _, _ = KrylovKit.svdsolve(state_matrix, vector_size, min(n_singular_values,30), :LR)
 
     SvN = 0.0
     renyi = 0.0
-    p = vals.^2
-    p ./= sum(p)
-    for n in eachindex(vals)
+    # p = vals.^2
+    # p ./= sum(p)
+    for n in eachindex(p)
         SvN -= p[n] * log(p[n])
         renyi += p[n]^2
     end
     renyi = - 0.5*log(renyi)
     # println(renyi)
-    return SvN, renyi
+    return SvN, renyi, p
 end
 
 function projection_helper(state, projected_state, index, transformed_index,parity)
